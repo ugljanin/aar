@@ -1,3 +1,3 @@
 <?php
-echo "novi fajl master";
+echo "novi fajl master 1";
 ?>
