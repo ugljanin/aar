@@ -1,3 +1,3 @@
 <?php
-echo "novi fajl";
+echo "novi fajl gcloud";
 ?>
