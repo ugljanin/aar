@@ -1,3 +1,4 @@
 <?php
-echo "novi fajl master 1";
+echo "<h1>Hi Thar and Zakaria</h1>";
+echo '<p>I am working, please wait :)</p>'
 ?>
