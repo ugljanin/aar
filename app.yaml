@@ -9,9 +9,11 @@ env_variables:
   MYSQL_PASSWORD: 'zakaria'
 
 handlers:
-- url: /.*
-  script: index.php
 - url: /css
   static_dir: css
+
 - url: /js
   static_dir: js
+
+- url: .*
+  script: index.php
