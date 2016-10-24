@@ -1,8 +1,11 @@
 <?php
 function db_connect()
 {
+	$dsn=getenv('MYSQL_DSN');
+	$user=getenv('MYSQL_USER');
+	$password=getenv('MYSQL_PASSWORD');
 
-	$result=new mysqli('mysql:host=127.0.0.1;port=3306;dbname=guestbook','root','zakaria','baza');
+	$result=new mysqli($dsn,$user,$password);
 	if(!$result)
 		return false;
 	else
