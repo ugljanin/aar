@@ -10,4 +10,4 @@ env_variables:
 
 handlers:
 - url: /.*
-  script: index.php
+  script: test.php
