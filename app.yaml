@@ -24,5 +24,8 @@ handlers:
 - url: /logout.php
   script: logout.php
 
+- url: /access-token.php
+  script: access-token.php
+
 - url: .*
   script: index.php
