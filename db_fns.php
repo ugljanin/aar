@@ -5,7 +5,8 @@ function db_connect()
 	$user=getenv('MYSQL_USER');
 	$password=getenv('MYSQL_PASSWORD');
 
-	$result=new mysqli('127.0.0.1','root','zakaria','baza','3306','/cloudsql/datahouse');
+	//$result=new mysqli('localhost','root','zakaria','baza','3306','/cloudsql/datahouse');
+	$result=new mysqli(null,'root','zakaria','baza',null,'/cloudsql/aar-framework:europe-west1:datahouse');
 
 	if(!$result)
 		return false;
