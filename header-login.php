@@ -19,7 +19,7 @@
         <!-- Custom styles for this template -->
         <link href="css/style.css" rel="stylesheet">
 
-<script type="text/javascript" src="http://code.jquery.com/jquery-1.10.1.js"></script>
+<script type="text/javascript" src="js/jquery-1.10.1.js"></script>
 
 
     </head>
