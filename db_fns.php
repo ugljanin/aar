@@ -5,7 +5,8 @@ function db_connect()
 	$user=getenv('MYSQL_USER');
 	$password=getenv('MYSQL_PASSWORD');
 
-	$result=new mysqli($dsn,$user,$password);
+	$result=new mysqli('104.199.61.200','root','zakaria','baza');
+);
 	if(!$result)
 		return false;
 	else
