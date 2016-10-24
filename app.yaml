@@ -27,5 +27,8 @@ handlers:
 - url: /access-token.php
   script: access-token.php
 
+- url: /report.php
+  script: report.php
+
 - url: .*
   script: index.php
