@@ -2,7 +2,7 @@
 function db_connect()
 {
 
-	$result=new mysqli('localhost','socialco_emir','xCzURKf%srO_','socialco_resources');
+	$result=new mysqli('mysql:host=127.0.0.1;port=3306;dbname=guestbook','root','zakaria','baza');
 	if(!$result)
 		return false;
 	else
