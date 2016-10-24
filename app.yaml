@@ -18,5 +18,8 @@ handlers:
 - url: /dashboard.php
   script: dashboard.php
 
+- url: /logout.php
+  script: logout.php
+
 - url: .*
   script: index.php
