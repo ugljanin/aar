@@ -7,8 +7,6 @@ function db_connect()
 
 	$result=new mysqli('127.0.0.1','root','zakaria','baza','3306','/cloudsql/datahouse');
 
-	//$result=new mysqli($dsn,$user,$password);
-
 	if(!$result)
 		return false;
 	else
