@@ -5,7 +5,7 @@ function db_connect()
 	$user=getenv('MYSQL_USER');
 	$password=getenv('MYSQL_PASSWORD');
 
-	$result=new mysqli('127.0.0.1','root','zakaria','baza','3306');
+	$result=new mysqli('127.0.0.1','root','zakaria','baza','3306','/cloudsql/datahouse');
 
 	//$result=new mysqli($dsn,$user,$password);
 
