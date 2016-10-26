@@ -29,6 +29,10 @@ else
 }
 */
 
+	$myfile = fopen("post.txt", "w") or die("Unable to open file!");
+	fwrite($myfile, $_POST['json']);
+	fclose($myfile);
+
 $json_a = json_decode($_POST['json'], true);
 
 foreach($json_a['Details'] as $date)
