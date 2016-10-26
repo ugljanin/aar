@@ -124,6 +124,8 @@ else if($_GET[action]=='submit'&&$_SESSION[role]=='admin')
 				accesstoken='".$accesstoken."',
 				status='".$status."'
 				where gatewayid='".$gatewayid."'";
+		echo $sql;
+		exit();
 		$result=mysqli_query($conn,$sql);
 
 		if($result)
