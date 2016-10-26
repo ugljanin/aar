@@ -32,16 +32,15 @@ else
 
 $json_a = json_decode($_POST['json'], true);
 
-foreach($json_a['Detail'] as $date)
+foreach($json_a['Details'] as $date)
 {
-	 $currdate=$date[date];
+	 $currdate=$date['date'];
 }
 
 foreach($json_a['SensorData'] as $data)
 {
-		$sql="insert into sensordata (name, value, date) values ('".$data[name]."','".$data[value]."','".$currdate."')"
+		$sql="insert into sensordata (name, value, date) values ('".$data[name]."','".$data[value]."','".$currdate."')";
 		$result=mysqli_query($conn,$sql);
 }
-?>
 
 ?>
