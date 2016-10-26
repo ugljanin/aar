@@ -34,4 +34,11 @@ if(mysqli_num_rows($result)=='1')
 	}
 
 }
+else
+{
+		$myfile = fopen("gs://aar-framework.appspot.com/post.txt", 'w');
+	//$myfile = fopen("post.txt", "w") or die("Unable to open file!");
+	fwrite($myfile, "Nije proslo");
+	fclose($myfile);
+}
 ?>
