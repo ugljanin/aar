@@ -110,7 +110,7 @@ else if($_GET[action]=='submit'&&$_SESSION[role]=='admin')
 	$accesstoken=$_POST[accesstoken];
 	$name=$_POST[name];
 	$status=$_POST[status];
-	$location=$_SESSION[location];
+	$location=$_POST[location];
 	$date=date('Y-m-d H:s:i',time());
 
 
