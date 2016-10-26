@@ -3,7 +3,7 @@ include("fns.php");
 
 date_default_timezone_set('UTC');
 
-$title="ICU temperature and humidity monitoring and control";
+$title="Configure gateway";
 include "header.php";
 
 $conn=db_connect();
@@ -14,7 +14,7 @@ if($_GET[action]=='list')
 {
 
 ?>
-<a href="gateway.php?action=add" class="btn btn-primary" role="button">Create new gateway</a>
+<a href="gateways.php?action=add" class="btn btn-primary" role="button">Create new gateway</a>
 	<div class="row">
 		<div class="col-sm-12">
 			<h2>List of gateways</h2>
@@ -48,7 +48,7 @@ if($_GET[action]=='list')
 								echo '<td>'.$gateway[accesstoken].'</td>';
 								echo '<td>'.$gateway[status].'</td>';
 								if($gateway[status]=='Active')
-								echo '<td><a href="gateway.php?action=add&gatewayid='.$gateway[gatewayid].'">Edit</a> | <a href="gateway.php?action=add&gatewayid='.$gateway[gatewayid].'">Delete</a></td>';
+								echo '<td><a href="gateways.php?action=add&gatewayid='.$gateway[gatewayid].'">Edit</a> | <a href="gateway.php?action=add&gatewayid='.$gateway[gatewayid].'">Delete</a></td>';
 								else
 									echo '<td></td>';
 								echo '</tr>';
@@ -79,8 +79,8 @@ else if($_GET[action]=='add'&&$_SESSION[role]=='admin')
 	?>
 	<div class="row">
 			<div class="col-sm-12">
-				<h2>Patients gateway</h2>
-				 <form action="gateway.php?action=submit" method="post">
+				<h2>Gateways</h2>
+				 <form action="gateways.php?action=submit" method="post">
 				 <input type="hidden" name="gatewayid" value="<?php echo $gateway[gatewayid];?>">
 					<div class="form-group">
 						<label for="name">Name:</label>
@@ -162,7 +162,7 @@ else if($_GET[action]=='submit'&&$_SESSION[role]=='admin')
 		}
 	}
 
-	redirect("gateway.php?action=list");
+	redirect("gateways.php?action=list");
 }
 
 
