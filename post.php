@@ -28,8 +28,9 @@ else
 	fclose($myfile);
 }
 */
+$myfile = fopen("gs://${my_bucket}/post.txt", 'w');
 
-	$myfile = fopen("post.txt", "w") or die("Unable to open file!");
+	//$myfile = fopen("post.txt", "w") or die("Unable to open file!");
 	fwrite($myfile, $_POST['json']);
 	fclose($myfile);
 
