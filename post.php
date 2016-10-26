@@ -3,13 +3,11 @@ include("fns.php");
 
 date_default_timezone_set('UTC');
 
-$title="Configure gateway";
-include "header.php";
-
 $conn=db_connect();
 $time=time();
 $timedate=date('Y-m-d H:s:i',$time);
 
+/*
 $sql="select * from configuration where configurationid=1";
 $result=mysqli_query($conn,$sql);
 
@@ -29,6 +27,7 @@ else
 	fwrite($myfile, $_POST['json']);
 	fclose($myfile);
 }
+*/
 
 $json_a = json_decode($_POST['json'], true);
 
