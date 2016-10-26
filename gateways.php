@@ -122,10 +122,10 @@ else if($_GET[action]=='submit'&&$_SESSION[role]=='admin')
 		$sql="update gateways
 		set name='".$name."',
 				accesstoken='".$accesstoken."',
+				location='".$location."',
 				status='".$status."'
 				where gatewayid='".$gatewayid."'";
-		echo $sql;
-		exit();
+
 		$result=mysqli_query($conn,$sql);
 
 		if($result)
