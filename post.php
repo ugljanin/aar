@@ -8,7 +8,7 @@ $time=time();
 $timedate=date('Y-m-d H:s:i',$time);
 
 
-$sql="select * from gateways where accesstoken='$_POST['accesstoken']' and status='Active'";
+$sql="select * from gateways where accesstoken='$_POST[accesstoken]' and status='Active'";
 $result=mysqli_query($conn,$sql);
 if(mysqli_num_rows($result)=='1')
 {
