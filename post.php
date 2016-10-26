@@ -28,7 +28,7 @@ else
 	fclose($myfile);
 }
 */
-$myfile = fopen("gs://${my_bucket}/post.txt", 'w');
+$myfile = fopen("gs://aar-framework.appspot.com/post.txt", 'w');
 
 	//$myfile = fopen("post.txt", "w") or die("Unable to open file!");
 	fwrite($myfile, $_POST['json']);
