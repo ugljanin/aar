@@ -24,6 +24,12 @@ handlers:
 - url: /logout.php
   script: logout.php
 
+- url: /post.txt
+  script: post.txt
+
+- url: /error.txt
+  script: error.txt
+
 - url: /gateways.php
   script: gateways.php
 
