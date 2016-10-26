@@ -47,10 +47,8 @@ if($_GET[action]=='list')
 								echo '<td>'.$gateway[location].'</td>';
 								echo '<td>'.$gateway[accesstoken].'</td>';
 								echo '<td>'.$gateway[status].'</td>';
-								if($gateway[status]=='Active')
 								echo '<td><a href="gateways.php?action=add&gatewayid='.$gateway[gatewayid].'">Edit</a> | <a href="gateway.php?action=add&gatewayid='.$gateway[gatewayid].'">Delete</a></td>';
-								else
-									echo '<td></td>';
+								echo '<td></td>';
 								echo '</tr>';
 							}
 						}
@@ -121,7 +119,7 @@ else if($_GET[action]=='submit'&&$_SESSION[role]=='admin')
 
 		$gatewayid=$_POST[gatewayid];
 
-		$sql="update gateway
+		$sql="update gateways
 		set name='".$name."',
 				accesstoken='".$accesstoken."',
 				status='".$status."'
@@ -144,7 +142,7 @@ else if($_GET[action]=='submit'&&$_SESSION[role]=='admin')
 	}
 	else
 	{
-		$sql="insert into gateway (name, accesstoken, location, status) values ('".$name."','".$accesstoken."','".$location."','".$status."')";
+		$sql="insert into gateways (name, accesstoken, location, status) values ('".$name."','".$accesstoken."','".$location."','".$status."')";
 		$result=mysqli_query($conn,$sql);
 
 		if($result)
