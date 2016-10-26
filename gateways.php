@@ -55,7 +55,7 @@ if($_GET[action]=='list')
 							}
 						}
 
-	}
+
 
 				?>
 					</tr>
