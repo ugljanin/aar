@@ -40,7 +40,11 @@ if(mysqli_num_rows($result)!=0)
 {
 	if($accesst[expiring]>$timedate)
 	{
-		$sqls="select * from sensordata where date like '%".$Y."-".$m."-".$d." ".$H.":".$i."%'";
+		$sqls="select sensordata.name as patient, sensordata.value, gateways.name
+		from sensordata,gateways
+		where gateways.gatewayid=sensordata.gatewayid
+		and gateways.gatewayid=1
+		and sensordata.date like '%".$Y."-".$m."-".$d." ".$H.":".$i."%'";
 
 		$results=mysqli_query($conn,$sqls);
 
@@ -56,10 +60,13 @@ if(mysqli_num_rows($result)!=0)
 						$heartbeat=$sensor[value];
 					if($sensor[name]=='bodytemperature')
 						$bodytemperature=$sensor[value];
+					if($sensor[patient]!='')
+						$patient=$sensor[patient];
 				}
 
 
 				array_push($PatientsDetails, [
+					'patientName'   => $name,
 					'date'   => $datum,
 					'humidity'   => $humidity,
 					'temperature'   => $temperature,
