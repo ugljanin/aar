@@ -70,8 +70,8 @@ if(mysqli_num_rows($result)!=0)
 			{
 				array_push($PatientsDetails, [
 					'humidity'   => 'Not measured for this date',
-					'temperature'   => 'Not measured for this date'
-					'heartbeat'   => 'Not measured for this date'
+					'temperature'   => 'Not measured for this date',
+					'heartbeat'   => 'Not measured for this date',
 					'bodytemperature'   => 'Not measured for this date'
 				]);
 			}
