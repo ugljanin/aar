@@ -29,6 +29,7 @@ $d=$_GET[d];
 $H=$_GET[H];
 $i=$_GET[i];
 $s=$_GET[s];
+$datum=date('Y-m-d H:i:s',strtotime($Y."-".$m."-".$d." ".$H.":".$i));
 $sql="select accesstokens.created, accesstokens.expiring, accesstokens.sesid, accesstokens.accesstoken, users.username
 				from accesstokens, users
 				where accesstokens.userid=users.userid and accesstokens.accesstoken='".$accesstoken."'";
@@ -60,6 +61,7 @@ if(mysqli_num_rows($result)!=0)
 
 
 				array_push($PatientsDetails, [
+					'date'   => $datum,
 					'humidity'   => $humidity,
 					'temperature'   => $temperature,
 					'heartbeat'   => $heartbeat,
@@ -69,6 +71,7 @@ if(mysqli_num_rows($result)!=0)
 			else
 			{
 				array_push($PatientsDetails, [
+					'date'   => $datum,
 					'humidity'   => 'Not measured for this date',
 					'temperature'   => 'Not measured for this date',
 					'heartbeat'   => 'Not measured for this date',
