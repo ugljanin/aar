@@ -75,7 +75,7 @@ if(mysqli_num_rows($result)!=0)
 					'bodytemperature'   => 'Not measured for this date'
 				]);
 			}
-		}
+
 
 		$created=$row[created];
 		$expiring=$row[expiring];
