@@ -46,9 +46,10 @@ if(mysqli_num_rows($result)!=0)
 
 			if(mysqli_num_rows($results)!='0')
 			{
-
+$idd=0;
 				while($sensor=mysqli_fetch_array($results,MYSQLI_ASSOC))
 				{
+					$idd++;
 					if($sensor[name]=='humidity')
 						$humidity=$sensor[value];
 					if($sensor[name]=='temperature')
@@ -62,7 +63,7 @@ if(mysqli_num_rows($result)!=0)
 
 				array_push($PatientsDetails, [
 					'date'   => $datum,
-					'humidity'   => $humidity,
+					'humidity'   => $humidity." - ".$idd,
 					'temperature'   => $temperature,
 					'heartbeat'   => $heartbeat,
 					'bodytemperature'   => $bodytemperature
@@ -72,10 +73,10 @@ if(mysqli_num_rows($result)!=0)
 			{
 				array_push($PatientsDetails, [
 					'date'   => $datum,
-					'humidity'   => 'Not measured for this date',
-					'temperature'   => 'Not measured for this date',
-					'heartbeat'   => 'Not measured for this date',
-					'bodytemperature'   => 'Not measured for this date'
+					'humidity'   => 'Not measured for this date!',
+					'temperature'   => 'Not measured for this date!',
+					'heartbeat'   => 'Not measured for this date!',
+					'bodytemperature'   => 'Not measured for this date!'
 				]);
 			}
 
