@@ -46,10 +46,8 @@ if(mysqli_num_rows($result)!=0)
 
 			if(mysqli_num_rows($results)!='0')
 			{
-$idd=0;
 				while($sensor=mysqli_fetch_array($results,MYSQLI_ASSOC))
 				{
-					$idd++;
 					if($sensor[name]=='humidity')
 						$humidity=$sensor[value];
 					if($sensor[name]=='temperature')
