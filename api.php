@@ -39,7 +39,7 @@ if(mysqli_num_rows($result)!=0)
 {
 	if($accesst[expiring]>$timedate)
 	{
-		$sqls="select * from sensordata where date='".$Y."-".$m."-".$d." ".$H.":".$i.":".$s."'";
+		$sqls="select * from sensordata where date like '%".$Y."-".$m."-".$d." ".$H.":".$i."%'";
 
 		$results=mysqli_query($conn,$sqls);
 
