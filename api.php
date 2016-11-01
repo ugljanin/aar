@@ -10,7 +10,7 @@ header('Content-Type: application/json');
 
 class Info {
 		public $UserDetails = "";
-		public $ConsumedResources  = "";
+		public $PatientsDetails  = "";
 	}
 
 	$Info = new Info();
@@ -20,9 +20,15 @@ $conn=db_connect();
 $time=time();
 $timedate=date('Y-m-d H:s:i',$time);
 
-$ConsumedResources = [];
+$PatientsDetails = [];
 $UserDetails = [];
 $accesstoken=$_GET[accesstoken];
+$Y=$_GET[Y];
+$m=$_GET[m];
+$d=$_GET[d];
+$H=$_GET[H];
+$i=$_GET[i];
+$s=$_GET[s];
 $sql="select accesstokens.created, accesstokens.expiring, accesstokens.sesid, accesstokens.accesstoken, users.username
 				from accesstokens, users
 				where accesstokens.userid=users.userid and accesstokens.accesstoken='".$accesstoken."'";
@@ -33,67 +39,40 @@ if(mysqli_num_rows($result)!=0)
 {
 	if($accesst[expiring]>$timedate)
 	{
+		$sqls="select * from sensordata where date='".$Y."-".$m."-".$d." ".$H.":".$i.":".$s."'";
 
-		$consumed=$_GET[consumed];
-		$date=$_GET[date];
-		if($consumed=='temperature')
-		{
-			$file="repository/temperature-".$date.".txt";
-			if(file_exists($file))
+		$results=mysqli_query($conn,$sqls);
+
+			if(mysqli_num_rows($results)!='0')
 			{
-				$myfile = fopen($file, "r");
-				array_push($ConsumedResources, [
-					'temperature'   => fread($myfile,filesize($file))
-				]);
-				fclose($myfile);
-			}
-			else
-			{
-				array_push($ConsumedResources, [
-					'temperature'   => 'Not measured for this date'
-				]);
-			}
-		}
-		else if($consumed=='humidity')
-		{
-			$file="repository/humidity-".$date.".txt";
-			if(file_exists($file))
-			{
-				$myfile = fopen($file, "r");
-				array_push($ConsumedResources, [
-					'humidity'   => fread($myfile,filesize($file))
-				]);
-				fclose($myfile);
-			}
-			else
-			{
-				array_push($ConsumedResources, [
-					'humidity'   => 'Not measured for this date'
-				]);
-			}
-		}
-		else if($consumed=='weather')
-		{
-			$file="repository/humidity-".$date.".txt";
-			$file1="repository/temperature-".$date.".txt";
-			if(file_exists($file))
-			{
-				$myfile = fopen($file, "r");
-				$humidity=fread($myfile,filesize($file));
-				$myfile1 = fopen($file1, "r");
-				$temperature=fread($myfile1,filesize($file1));
-				array_push($ConsumedResources, [
+
+				while($sensor=mysqli_fetch_array($results,MYSQLI_ASSOC))
+				{
+					if($sensor[name]=='humidity')
+						$humidity=$sensor[value];
+					if($sensor[name]=='temperature')
+						$temperature=$sensor[value];
+					if($sensor[name]=='heartbeat')
+						$heartbeat=$sensor[value];
+					if($sensor[name]=='bodytemperature')
+						$bodytemperature=$sensor[value];
+				}
+
+
+				array_push($PatientsDetails, [
 					'humidity'   => $humidity,
 					'temperature'   => $temperature
+					'heartbeat'   => $heartbeat
+					'bodytemperature'   => $bodytemperature
 				]);
-				fclose($myfile);
-				fclose($myfile1);
 			}
 			else
 			{
-				array_push($ConsumedResources, [
+				array_push($PatientsDetails, [
 					'humidity'   => 'Not measured for this date',
 					'temperature'   => 'Not measured for this date'
+					'heartbeat'   => 'Not measured for this date'
+					'bodytemperature'   => 'Not measured for this date'
 				]);
 			}
 		}
@@ -124,7 +103,7 @@ else
 }
 
 	$Info->UserDetails=$UserDetails;
-	$Info->ConsumedResources=$ConsumedResources;
+	$Info->PatientsDetails=$PatientsDetails;
 
 	print_r(json_encode($Info,JSON_PRETTY_PRINT));
 
