@@ -61,8 +61,8 @@ if(mysqli_num_rows($result)!=0)
 
 				array_push($PatientsDetails, [
 					'humidity'   => $humidity,
-					'temperature'   => $temperature
-					'heartbeat'   => $heartbeat
+					'temperature'   => $temperature,
+					'heartbeat'   => $heartbeat,
 					'bodytemperature'   => $bodytemperature
 				]);
 			}
