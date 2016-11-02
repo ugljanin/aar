@@ -40,7 +40,7 @@ if(mysqli_num_rows($result)!=0)
 {
 	if($accesst[expiring]>$timedate)
 	{
-		$sqls="select sensordata.name as patient, sensordata.value, gateways.name
+		$sqls="select sensordata.name, sensordata.value, gateways.name as patient
 		from sensordata,gateways
 		where gateways.gatewayid=sensordata.gatewayid
 		and gateways.gatewayid=1
