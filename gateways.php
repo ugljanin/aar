@@ -3,7 +3,6 @@ include("fns.php");
 
 date_default_timezone_set('UTC');
 
-include "header.php";
 
 $conn=db_connect();
 $time=time();
@@ -13,6 +12,8 @@ if($_GET[action]=='list')
 {
 
 $title="Gateway list";
+
+include "header.php";
 ?>
 <a href="gateways.php?action=add" class="btn btn-primary" role="button">Create new gateway</a>
 	<div class="row">
@@ -47,7 +48,7 @@ $title="Gateway list";
 								echo '<td>'.$gateway[location].'</td>';
 								echo '<td>'.$gateway[accesstoken].'</td>';
 								echo '<td>'.$gateway[status].'</td>';
-								echo '<td><a class="btn btn-md btn-info" href="gateways.php?action=dashboard&gatewayid='.$gateway[gatewayid].'">Dashboard</a> <a class="btn btn-md btn-success" href="gateways.php?action=add&gatewayid='.$gateway[gatewayid].'">Edit</a> <a class="btn btn-md btn-danger" href="gateway.php?action=add&gatewayid='.$gateway[gatewayid].'">Delete</a></td>';
+								echo '<td><a class="btn btn-md btn-info" href="gateways.php?action=monitor&gatewayid='.$gateway[gatewayid].'">Monitor</a> <a class="btn btn-md btn-success" href="gateways.php?action=add&gatewayid='.$gateway[gatewayid].'">Edit</a> <a class="btn btn-md btn-danger" href="gateway.php?action=add&gatewayid='.$gateway[gatewayid].'">Delete</a></td>';
 								echo '<td></td>';
 								echo '</tr>';
 							}
@@ -64,10 +65,12 @@ $title="Gateway list";
 	</div>
 	<?php
 }
-else if($_GET[action]=='dashboard'&&$_SESSION[role]=='admin')
+else if($_GET[action]=='monitor'&&$_SESSION[role]=='admin')
 {
 
-$title="Gateway dashboard";
+$title="Gateway monitoring";
+
+include "header.php";
 	$sql="SELECT  DATE_FORMAT( date, '%Y-%m-%d at %H:%i' ) sat, value
 	FROM sensordata
 	where gatewayid='1'
@@ -443,6 +446,8 @@ else if($_GET[action]=='add'&&$_SESSION[role]=='admin')
 {
 
 $title="Gateway add";
+
+include "header.php";
 	if($_GET[gatewayid]!=''||!empty($_GET[gatewayid]))
 	{
 		$gatewayid=$_GET[gatewayid];
@@ -486,6 +491,8 @@ else if($_GET[action]=='submit'&&$_SESSION[role]=='admin')
 {
 
 $title="Gateway submit";
+
+include "header.php";
 	$accesstoken=$_POST[accesstoken];
 	$name=$_POST[name];
 	$status=$_POST[status];
