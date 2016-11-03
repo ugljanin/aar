@@ -3,7 +3,6 @@ include("fns.php");
 
 date_default_timezone_set('UTC');
 
-$title="Configure gateway";
 include "header.php";
 
 $conn=db_connect();
@@ -13,6 +12,7 @@ $timedate=date('Y-m-d H:s:i',$time);
 if($_GET[action]=='list')
 {
 
+$title="Gateway list";
 ?>
 <a href="gateways.php?action=add" class="btn btn-primary" role="button">Create new gateway</a>
 	<div class="row">
@@ -66,6 +66,8 @@ if($_GET[action]=='list')
 }
 else if($_GET[action]=='dashboard'&&$_SESSION[role]=='admin')
 {
+
+$title="Gateway dashboard";
 	$sql="SELECT  DATE_FORMAT( date, '%Y-%m-%d at %H:%i' ) sat, value
 	FROM sensordata
 	where gatewayid='1'
@@ -82,702 +84,365 @@ else if($_GET[action]=='dashboard'&&$_SESSION[role]=='admin')
 				$prvi[]=0;
 	}
 	?>
-	<h2>Temperature sensor</h2>
+	<div class="row">
+		<div class="col-sm-6">
+        <canvas id="canvas"></canvas>
+		</div>
+		<div class="col-sm-6">
+        <canvas id="canvas1"></canvas>
+		</div>
+		<div class="col-sm-6">
+        <canvas id="canvas2"></canvas>
+		</div>
+		<div class="col-sm-6">
+        <canvas id="canvas3"></canvas>
+		</div>
+	</div>
 	<script>
-	defCanvasWidth=1200;
-defCanvasHeight=600;
-      document.write("<canvas id=\"grafikon1\" height=\""+defCanvasHeight+"\" width=\""+defCanvasWidth+"\"></canvas>");
+
+		var config = {
+            type: 'line',
+            data: {
+								<?php
+								$sati = implode('","', $datumi);
+								echo 'labels:["'.$sati.'"],';
+								?>
+                datasets: [{
+                    label: "Temperature",
+                    <?php
+										$prvi = implode(",", $prvi);
+										echo 'data:['.$prvi.'],';
+										?>
+                    fill: false,
+										borderColor: "rgba(179,181,198,1)",
+                }],
+
+								max: 30,
+								min: 20
+						},
+            options: {
+                responsive: true,
+
+                title:{
+                    display:true,
+                    text:'aaR* Framework'
+                },
+                tooltips: {
+                    mode: 'label',
+                    callbacks: {
+                    }
+                },
+                hover: {
+                    mode: 'dataset'
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Date and time'
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Degrees Celsius'
+                        },
+                        ticks: {
+                            suggestedMin: 0,
+                            suggestedMax: 60,
+                        }
+                    }]
+                }
+            }
+        };
+	<?php
+	unset($datumi);
+	unset($prvi);
+	$sql="SELECT  DATE_FORMAT( date, '%Y-%m-%d at %H:%i' ) sat, value
+	FROM sensordata
+	where gatewayid='1'
+	and name='humidity'
+	ORDER BY date DESC limit 60";
+	$result=mysqli_query($conn,$sql);
+
+	while($podaci=mysqli_fetch_array($result,MYSQLI_ASSOC))
+	{
+			$datumi[]=$podaci[sat];
+			if($podaci[value]!='Not measured for this date')
+				$prvi[]=$podaci[value];
+			else
+				$prvi[]=0;
+	}
+		?>
+		var config1 = {
+            type: 'line',
+            data: {
+								<?php
+								$sati = implode('","', $datumi);
+								echo 'labels:["'.$sati.'"],';
+								?>
+                datasets: [{
+                    label: "Humidity",
+                    <?php
+										$prvi = implode(",", $prvi);
+										echo 'data:['.$prvi.'],';
+										?>
+                    fill: false,
+										borderColor: "rgba(179,181,198,1)",
+                }
+            ]},
+            options: {
+                responsive: true,
+
+                title:{
+                    display:true,
+                    text:'aaR* Framework'
+                },
+                tooltips: {
+                    mode: 'label',
+                    callbacks: {
+                    }
+                },
+                hover: {
+                    mode: 'dataset'
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Date and time'
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Percent'
+                        },
+                        ticks: {
+                            suggestedMin: 0,
+                            suggestedMax: 100,
+                        }
+                    }]
+                }
+            }
+        };
+		<?php
+	unset($datumi);
+	unset($prvi);
+	$sql="SELECT  DATE_FORMAT( date, '%Y-%m-%d at %H:%i' ) sat, value
+	FROM sensordata
+	where gatewayid='1'
+	and name='bodytemperature'
+	ORDER BY date DESC limit 60";
+	$result=mysqli_query($conn,$sql);
+
+	while($podaci=mysqli_fetch_array($result,MYSQLI_ASSOC))
+	{
+			$datumi[]=$podaci[sat];
+			if($podaci[value]!='Not measured for this date')
+				$prvi[]=$podaci[value];
+			else
+				$prvi[]=0;
+	}
+		?>
+		var config2 = {
+            type: 'line',
+            data: {
+								<?php
+								$sati = implode('","', $datumi);
+								echo 'labels:["'.$sati.'"],';
+								?>
+                datasets: [{
+                    label: "Body temperature",
+                    <?php
+										$prvi = implode(",", $prvi);
+										echo 'data:['.$prvi.'],';
+										?>
+                    fill: false,
+										borderColor: "rgba(179,181,198,1)",
+                }
+            ]},
+            options: {
+                responsive: true,
+
+                title:{
+                    display:true,
+                    text:'aaR* Framework'
+                },
+                tooltips: {
+                    mode: 'label',
+                    callbacks: {
+                    }
+                },
+                hover: {
+                    mode: 'dataset'
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Date and time'
+                        },
+												gridLines: {
+														zeroLineColor: "rgba(0,255,0,1)"
+												}
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Degrees Celsius'
+                        },
+                        ticks: {
+                            suggestedMin: 30,
+                            suggestedMax: 50,
+                        }
+                    }]
+                }
+            }
+        };
+		<?php
+	unset($datumi);
+	unset($prvi);
+	$sql="SELECT  DATE_FORMAT( date, '%Y-%m-%d at %H:%i' ) sat, value
+	FROM sensordata
+	where gatewayid='1'
+	and name='heartbeat'
+	ORDER BY date DESC limit 60";
+	$result=mysqli_query($conn,$sql);
+
+	while($podaci=mysqli_fetch_array($result,MYSQLI_ASSOC))
+	{
+			$datumi[]=$podaci[sat];
+			if($podaci[value]!='Not measured for this date')
+				$prvi[]=$podaci[value];
+			else
+				$prvi[]=0;
+	}
+		?>
+		var config3 = {
+            type: 'line',
+            data: {
+								<?php
+								$sati = implode('","', $datumi);
+								echo 'labels:["'.$sati.'"],';
+								?>
+                datasets: [{
+                    label: "Heart beat",
+                    <?php
+										$prvi = implode(",", $prvi);
+										echo 'data:['.$prvi.'],';
+										?>
+                    fill: false,
+										borderColor: "rgba(179,181,198,1)",
+                }
+            ]},
+            options: {
+                responsive: true,
+
+                title:{
+                    display:true,
+                    text:'aaR* Framework'
+                },
+                tooltips: {
+                    mode: 'label',
+                    callbacks: {
+                    }
+                },
+                hover: {
+                    mode: 'dataset'
+                },
+                scales: {
+                    xAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Date and time'
+                        }
+                    }],
+                    yAxes: [{
+                        display: true,
+                        scaleLabel: {
+                            display: true,
+                            labelString: 'Number of heart beats in one minute'
+                        },
+                        ticks: {
+                            suggestedMin: 30,
+                            suggestedMax: 150,
+                        }
+                    }]
+                }
+            }
+        };
+		window.onload = function() {
+			var originalLineDraw = Chart.controllers.line.prototype.draw;
+Chart.helpers.extend(Chart.controllers.line.prototype, {
+  draw: function() {
+    originalLineDraw.apply(this, arguments);
+
+    var chart = this.chart;
+    var ctx = chart.chart.ctx;
+
+    var xaxis = chart.scales['x-axis-0'];
+    var yaxis = chart.scales['y-axis-0'];
+
+    var limits = new Array();
+
+    var max = new Array();
+    max["value"] = chart.config.data.max;
+    max["label"] = "Max.";
+    max["color"] = "#FF0000";
+    limits.push(max);
+
+    var min = new Array();
+    min["value"] = chart.config.data.min;
+    min["label"] = "Min.";
+    min["color"] = "#FF0000";
+    limits.push(min);
 
 
-		var lineChartData1 = {
-			<?php
-			$sati = implode('","', $datumi);
-			echo 'labels:["'.$sati.'"],';
-			?>
-			datasets : [
-				{
-					label: "Temperature",
-					fillColor : "rgba(255,0,0,0.0)",
-					strokeColor : "rgba(255,0,0,1)",
-					pointColor : "rgba(255,0,0,1)",
-					pointStrokeColor : "#fff",
-					pointHighlightFill : "#fff",
-					pointHighlightStroke : "rgba(255,0,0,1)",
-					<?php
-					$prvi = implode(",", $prvi);
-					echo 'data:['.$prvi.']';
-					?>
-				}
-			]
+    for (var i = 0; i < limits.length; i++) {
 
-		}
+      //Refactor the value
+      limits[i].value = yaxis.getPixelForValue(limits[i].value, undefined);
+      ctx.fillStyle = 'black';
+      ctx.fillText(limits[i].label, 5, limits[i].value - 5);
+
+      ctx.save();
+      ctx.beginPath();
+      ctx.moveTo(xaxis.left, limits[i].value);
+      ctx.strokeStyle = limits[i].color;
+      ctx.lineTo(xaxis.right, limits[i].value);
+      ctx.stroke();
+      ctx.restore();
+    }
+  }
+});
+            var ctxa = document.getElementById("canvas").getContext("2d");
+            window.myLine = new Chart(ctxa, config);
+            var ctx1 = document.getElementById("canvas1").getContext("2d");
+            window.myLine = new Chart(ctx1, config1);
+            var ctx2 = document.getElementById("canvas2").getContext("2d");
+            window.myLine = new Chart(ctx2, config2);
+            var ctx3 = document.getElementById("canvas3").getContext("2d");
+            window.myLine = new Chart(ctx3, config3);
+        };
 		</script>
 
 
 
 
-  <!div id="divCursor" style="position:absolute"> <!/div>
-
-  <center>
-    <script>
-
-
-
-
-
-  var allopts = {
-	//Boolean - If we show the scale above the chart data	  -> Default value Changed
-  scaleOverlay : true,
-	//Boolean - If we want to override with a hard coded scale
-	scaleOverride : false,
-	//** Required if scaleOverride is true **
-	//Number - The number of steps in a hard coded scale
-	scaleSteps : null,
-	//Number - The value jump in the hard coded scale
-	scaleStepWidth : null,
-	//Number - The scale starting value
-	scaleStartValue : null,
-	//String - Colour of the scale line
-	scaleLineColor : "rgba(0,0,0,.1)",
-	//Number - Pixel width of the scale line
-	scaleLineWidth : 1,
-	//Boolean - Whether to show labels on the scale
-	scaleShowLabels : true,
-	//Interpolated JS string - can access value
-	scaleLabel : "<%=value%>",
-	//String - Scale label font declaration for the scale label
-	scaleFontFamily : "'Arial'",
-	//Number - Scale label font size in pixels
-	scaleFontSize : 12,
-	//String - Scale label font weight style
-	scaleFontStyle : "normal",
-	//String - Scale label font colour
-	scaleFontColor : "#666",
-	///Boolean - Whether grid lines are shown across the chart
-	scaleShowGridLines : true,
-	//String - Colour of the grid lines
-	scaleGridLineColor : "rgba(0,0,0,.05)",
-	//Number - Width of the grid lines
-	scaleGridLineWidth : 1,
-	//Boolean - Whether the line is curved between points -> Default value Changed
-	bezierCurve : false,
-	//Boolean - Whether to show a dot for each point -> Default value Changed
-	pointDot : false,
-	//Number - Radius of each point dot in pixels
-	pointDotRadius : 3,
-	//Number - Pixel width of point dot stroke
-	pointDotStrokeWidth : 1,
-	//Boolean - Whether to show a stroke for datasets
-	datasetStroke : true,
-	//Number - Pixel width of dataset stroke
-	datasetStrokeWidth : 2,
-	//Boolean - Whether to fill the dataset with a colour
-	datasetFill : true,
-	//Boolean - Whether to animate the chart             -> Default value changed
-	animation : false,
-	//Number - Number of animation steps
-	animationSteps : 60,
-	//String - Animation easing effect
-	animationEasing : "easeOutQuart",
-	//Function - Fires when the animation is complete
-	onAnimationComplete : null,
-  canvasBorders : true,
-  canvasBordersWidth : 30,
-  canvasBordersColor : "black",
-  yAxisLeft : true,
-  yAxisRight : true,
-  yAxisLabel : "Y axis",
-  yAxisFontFamily : "'Arial'",
-	yAxisFontSize : 50,
-	yAxisFontStyle : "normal",
-	yAxisFontColor : "#666",
-  xAxisLabel : "",
-	xAxisFontFamily : "'Arial'",
-	xAxisFontSize : 16,
-	xAxisFontStyle : "normal",
-	xAxisFontColor : "#666",
-  yAxisUnit : "UNIT",
-	yAxisUnitFontFamily : "'Arial'",
-	yAxisUnitFontSize : 12,
-	yAxisUnitFontStyle : "normal",
-	yAxisUnitFontColor : "#666",
-  graphTitle : "",
-	graphTitleFontFamily : "'Arial'",
-	graphTitleFontSize : 24,
-	graphTitleFontStyle : "bold",
-	graphTitleFontColor : "#666",
-  graphSubTitle : "",
-	graphSubTitleFontFamily : "'Arial'",
-	graphSubTitleFontSize : 18,
-	graphSubTitleFontStyle : "normal",
-	graphSubTitleFontColor : "#666",
-  footNote : "Footnote",
-	footNoteFontFamily : "'Arial'",
-	footNoteFontSize : 50,
-	footNoteFontStyle : "bold",
-	footNoteFontColor : "#666",
-  legend : true,
-	legendFontFamily : "'Arial'",
-	legendFontSize : 18,
-	legendFontStyle : "normal",
-	legendFontColor : "#666",
-  legendBlockSize : 30,
-  legendBorders : true,
-  legendBordersWidth : 30,
-  legendBordersColor : "#666",
-  //  ADDED PARAMETERS
-  graphMin : "DEFAULT",
-  graphMax : "DEFAULT"
-
-  }
-
-    var noopts = {
-  nooptions : "",
-  yAxisRight : true,
-  scaleTickSizeLeft : 0,
-  scaleTickSizeRight : 0,
-  scaleTickSizeBottom : 0,
-  scaleTickSizeTop : 1
-
-
-  }
-
-    var onlyborderopts = {
-  canvasBorders : true,
-  canvasBordersWidth : 3,
-  canvasBordersColor : "black"
-
-  }
-
-var newopts = {
-      inGraphDataShow : false,
-      datasetFill : true,
-      scaleLabel: "<%=value%>",
-      scaleTickSizeRight : 5,
-      scaleTickSizeLeft : 5,
-      scaleTickSizeBottom : 5,
-      scaleTickSizeTop : 5,
-      scaleFontSize : 16,
-      canvasBorders : true,
-      canvasBordersWidth : 3,
-      canvasBordersColor : "black",
-			graphTitleFontFamily : "'Arial'",
-			graphTitleFontSize : 24,
-			graphTitleFontStyle : "bold",
-			graphTitleFontColor : "#666",
-			graphSubTitleFontFamily : "'Arial'",
-			graphSubTitleFontSize : 18,
-			graphSubTitleFontStyle : "normal",
-			graphSubTitleFontColor : "#666",
-			footNoteFontFamily : "'Arial'",
-			footNoteFontSize : 8,
-			footNoteFontStyle : "bold",
-			footNoteFontColor : "#666",
-      legend : true,
-	    legendFontFamily : "'Arial'",
-	    legendFontSize : 12,
-	    legendFontStyle : "normal",
-	    legendFontColor : "#666",
-      legendBlockSize : 15,
-      legendBorders : true,
-      legendBordersWidth : 1,
-      legendBordersColors : "#666",
-      yAxisLeft : true,
-      yAxisRight : false,
-      xAxisBottom : true,
-      xAxisTop : false,
-			yAxisFontFamily : "'Arial'",
-			yAxisFontSize : 16,
-			yAxisFontStyle : "normal",
-			yAxisFontColor : "#666",
-	 	  xAxisFontFamily : "'Arial'",
-			xAxisFontSize : 16,
-			xAxisFontStyle : "normal",
-			xAxisFontColor : "#666",
-			yAxisUnitFontFamily : "'Arial'",
-			yAxisUnitFontSize : 8,
-			yAxisUnitFontStyle : "normal",
-			yAxisUnitFontColor : "#666",
-      annotateDisplay : true,
-      spaceTop : 0,
-      spaceBottom : 0,
-      spaceLeft : 0,
-      spaceRight : 0,
-      logarithmic: false,
-//      showYAxisMin : false,
-      rotateLabels : "smart",
-      xAxisSpaceOver : 0,
-      xAxisSpaceUnder : 0,
-      xAxisLabelSpaceAfter : 0,
-      xAxisLabelSpaceBefore : 0,
-      legendBordersSpaceBefore : 0,
-      legendBordersSpaceAfter : 0,
-      footNoteSpaceBefore : 0,
-      footNoteSpaceAfter : 0,
-      startAngle : 0,
-      dynamicDisplay : true
-}
-
-
-
-var so2 = {
-      graphTitle : "SO2 Merenja",
-      graphSubTitle : "SWAP-APM",
-      footNote : "Footnote for the graph",
-      yAxisLabel : "SO2 vrednosti",
-      xAxisLabel : "Vreme merenja u satima",
-      yAxisUnit : "µg/m3",
- inGraphDataShow : false,
-      datasetFill : true,
-      scaleLabel: "<%=value%>",
-      scaleTickSizeRight : 5,
-      scaleTickSizeLeft : 5,
-      scaleTickSizeBottom : 5,
-      scaleTickSizeTop : 5,
-      scaleFontSize : 16,
-      canvasBorders : true,
-      canvasBordersWidth : 3,
-      canvasBordersColor : "black",
-			graphTitleFontFamily : "'Arial'",
-			graphTitleFontSize : 24,
-			graphTitleFontStyle : "bold",
-			graphTitleFontColor : "#666",
-			graphSubTitleFontFamily : "'Arial'",
-			graphSubTitleFontSize : 18,
-			graphSubTitleFontStyle : "normal",
-			graphSubTitleFontColor : "#666",
-			footNoteFontFamily : "'Arial'",
-			footNoteFontSize : 8,
-			footNoteFontStyle : "bold",
-			footNoteFontColor : "#666",
-      legend : true,
-	    legendFontFamily : "'Arial'",
-	    legendFontSize : 12,
-	    legendFontStyle : "normal",
-	    legendFontColor : "#666",
-      legendBlockSize : 15,
-      legendBorders : true,
-      legendBordersWidth : 1,
-      legendBordersColors : "#666",
-      yAxisLeft : true,
-      yAxisRight : false,
-      xAxisBottom : true,
-      xAxisTop : false,
-			yAxisFontFamily : "'Arial'",
-			yAxisFontSize : 16,
-			yAxisFontStyle : "normal",
-			yAxisFontColor : "#666",
-	 	  xAxisFontFamily : "'Arial'",
-			xAxisFontSize : 16,
-			xAxisFontStyle : "normal",
-			xAxisFontColor : "#666",
-			yAxisUnitFontFamily : "'Arial'",
-			yAxisUnitFontSize : 8,
-			yAxisUnitFontStyle : "normal",
-			yAxisUnitFontColor : "#666",
-      annotateDisplay : true,
-      spaceTop : 0,
-      spaceBottom : 0,
-      spaceLeft : 0,
-      spaceRight : 0,
-      logarithmic: false,
-//      showYAxisMin : false,
-      rotateLabels : "smart",
-      xAxisSpaceOver : 0,
-      xAxisSpaceUnder : 0,
-      xAxisLabelSpaceAfter : 0,
-      xAxisLabelSpaceBefore : 0,
-      legendBordersSpaceBefore : 0,
-      legendBordersSpaceAfter : 0,
-      footNoteSpaceBefore : 0,
-      footNoteSpaceAfter : 0,
-      startAngle : 0,
-      dynamicDisplay : true
-}
-
-var no2 = {
-      graphTitle : "NO2 Merenja",
-      graphSubTitle : "SWAP-APM",
-      footNote : "Footnote for the graph",
-      yAxisLabel : "NO2 vrednosti",
-      xAxisLabel : "Vreme merenja u satima",
-      yAxisUnit : "µg/m3",
-inGraphDataShow : false,
-      datasetFill : true,
-      scaleLabel: "<%=value%>",
-      scaleTickSizeRight : 5,
-      scaleTickSizeLeft : 5,
-      scaleTickSizeBottom : 5,
-      scaleTickSizeTop : 5,
-      scaleFontSize : 16,
-      canvasBorders : true,
-      canvasBordersWidth : 3,
-      canvasBordersColor : "black",
-			graphTitleFontFamily : "'Arial'",
-			graphTitleFontSize : 24,
-			graphTitleFontStyle : "bold",
-			graphTitleFontColor : "#666",
-			graphSubTitleFontFamily : "'Arial'",
-			graphSubTitleFontSize : 18,
-			graphSubTitleFontStyle : "normal",
-			graphSubTitleFontColor : "#666",
-			footNoteFontFamily : "'Arial'",
-			footNoteFontSize : 8,
-			footNoteFontStyle : "bold",
-			footNoteFontColor : "#666",
-      legend : true,
-	    legendFontFamily : "'Arial'",
-	    legendFontSize : 12,
-	    legendFontStyle : "normal",
-	    legendFontColor : "#666",
-      legendBlockSize : 15,
-      legendBorders : true,
-      legendBordersWidth : 1,
-      legendBordersColors : "#666",
-      yAxisLeft : true,
-      yAxisRight : false,
-      xAxisBottom : true,
-      xAxisTop : false,
-			yAxisFontFamily : "'Arial'",
-			yAxisFontSize : 16,
-			yAxisFontStyle : "normal",
-			yAxisFontColor : "#666",
-	 	  xAxisFontFamily : "'Arial'",
-			xAxisFontSize : 16,
-			xAxisFontStyle : "normal",
-			xAxisFontColor : "#666",
-			yAxisUnitFontFamily : "'Arial'",
-			yAxisUnitFontSize : 8,
-			yAxisUnitFontStyle : "normal",
-			yAxisUnitFontColor : "#666",
-      annotateDisplay : true,
-      spaceTop : 0,
-      spaceBottom : 0,
-      spaceLeft : 0,
-      spaceRight : 0,
-      logarithmic: false,
-//      showYAxisMin : false,
-      rotateLabels : "smart",
-      xAxisSpaceOver : 0,
-      xAxisSpaceUnder : 0,
-      xAxisLabelSpaceAfter : 0,
-      xAxisLabelSpaceBefore : 0,
-      legendBordersSpaceBefore : 0,
-      legendBordersSpaceAfter : 0,
-      footNoteSpaceBefore : 0,
-      footNoteSpaceAfter : 0,
-      startAngle : 0,
-      dynamicDisplay : true
-}
-var co = {
-      graphTitle : "CO Merenja",
-      graphSubTitle : "SWAP-APM",
-      footNote : "Footnote for the graph",
-      yAxisLabel : "CO vrednosti",
-      xAxisLabel : "Vreme merenja u satima",
-      yAxisUnit : "mg/m3",
-inGraphDataShow : false,
-      datasetFill : true,
-      scaleLabel: "<%=value%>",
-      scaleTickSizeRight : 5,
-      scaleTickSizeLeft : 5,
-      scaleTickSizeBottom : 5,
-      scaleTickSizeTop : 5,
-      scaleFontSize : 16,
-      canvasBorders : true,
-      canvasBordersWidth : 3,
-      canvasBordersColor : "black",
-			graphTitleFontFamily : "'Arial'",
-			graphTitleFontSize : 24,
-			graphTitleFontStyle : "bold",
-			graphTitleFontColor : "#666",
-			graphSubTitleFontFamily : "'Arial'",
-			graphSubTitleFontSize : 18,
-			graphSubTitleFontStyle : "normal",
-			graphSubTitleFontColor : "#666",
-			footNoteFontFamily : "'Arial'",
-			footNoteFontSize : 8,
-			footNoteFontStyle : "bold",
-			footNoteFontColor : "#666",
-      legend : true,
-	    legendFontFamily : "'Arial'",
-	    legendFontSize : 12,
-	    legendFontStyle : "normal",
-	    legendFontColor : "#666",
-      legendBlockSize : 15,
-      legendBorders : true,
-      legendBordersWidth : 1,
-      legendBordersColors : "#666",
-      yAxisLeft : true,
-      yAxisRight : false,
-      xAxisBottom : true,
-      xAxisTop : false,
-			yAxisFontFamily : "'Arial'",
-			yAxisFontSize : 16,
-			yAxisFontStyle : "normal",
-			yAxisFontColor : "#666",
-	 	  xAxisFontFamily : "'Arial'",
-			xAxisFontSize : 16,
-			xAxisFontStyle : "normal",
-			xAxisFontColor : "#666",
-			yAxisUnitFontFamily : "'Arial'",
-			yAxisUnitFontSize : 8,
-			yAxisUnitFontStyle : "normal",
-			yAxisUnitFontColor : "#666",
-      annotateDisplay : true,
-      spaceTop : 0,
-      spaceBottom : 0,
-      spaceLeft : 0,
-      spaceRight : 0,
-      logarithmic: false,
-//      showYAxisMin : false,
-      rotateLabels : "smart",
-      xAxisSpaceOver : 0,
-      xAxisSpaceUnder : 0,
-      xAxisLabelSpaceAfter : 0,
-      xAxisLabelSpaceBefore : 0,
-      legendBordersSpaceBefore : 0,
-      legendBordersSpaceAfter : 0,
-      footNoteSpaceBefore : 0,
-      footNoteSpaceAfter : 0,
-      startAngle : 0,
-      dynamicDisplay : true
-}
-var o3 = {
-      graphTitle : "O3 Merenja",
-      graphSubTitle : "SWAP-APM",
-      footNote : "Footnote for the graph",
-      yAxisLabel : "O3 vrednosti",
-      xAxisLabel : "Vreme merenja u satima",
-      yAxisUnit : "µg/m3",
-inGraphDataShow : false,
-      datasetFill : true,
-      scaleLabel: "<%=value%>",
-      scaleTickSizeRight : 5,
-      scaleTickSizeLeft : 5,
-      scaleTickSizeBottom : 5,
-      scaleTickSizeTop : 5,
-      scaleFontSize : 16,
-      canvasBorders : true,
-      canvasBordersWidth : 3,
-      canvasBordersColor : "black",
-			graphTitleFontFamily : "'Arial'",
-			graphTitleFontSize : 24,
-			graphTitleFontStyle : "bold",
-			graphTitleFontColor : "#666",
-			graphSubTitleFontFamily : "'Arial'",
-			graphSubTitleFontSize : 18,
-			graphSubTitleFontStyle : "normal",
-			graphSubTitleFontColor : "#666",
-			footNoteFontFamily : "'Arial'",
-			footNoteFontSize : 8,
-			footNoteFontStyle : "bold",
-			footNoteFontColor : "#666",
-      legend : true,
-	    legendFontFamily : "'Arial'",
-	    legendFontSize : 12,
-	    legendFontStyle : "normal",
-	    legendFontColor : "#666",
-      legendBlockSize : 15,
-      legendBorders : true,
-      legendBordersWidth : 1,
-      legendBordersColors : "#666",
-      yAxisLeft : true,
-      yAxisRight : false,
-      xAxisBottom : true,
-      xAxisTop : false,
-			yAxisFontFamily : "'Arial'",
-			yAxisFontSize : 16,
-			yAxisFontStyle : "normal",
-			yAxisFontColor : "#666",
-	 	  xAxisFontFamily : "'Arial'",
-			xAxisFontSize : 16,
-			xAxisFontStyle : "normal",
-			xAxisFontColor : "#666",
-			yAxisUnitFontFamily : "'Arial'",
-			yAxisUnitFontSize : 8,
-			yAxisUnitFontStyle : "normal",
-			yAxisUnitFontColor : "#666",
-      annotateDisplay : true,
-      spaceTop : 0,
-      spaceBottom : 0,
-      spaceLeft : 0,
-      spaceRight : 0,
-      logarithmic: false,
-//      showYAxisMin : false,
-      rotateLabels : "smart",
-      xAxisSpaceOver : 0,
-      xAxisSpaceUnder : 0,
-      xAxisLabelSpaceAfter : 0,
-      xAxisLabelSpaceBefore : 0,
-      legendBordersSpaceBefore : 0,
-      legendBordersSpaceAfter : 0,
-      footNoteSpaceBefore : 0,
-      footNoteSpaceAfter : 0,
-      startAngle : 0,
-      dynamicDisplay : true
-}
-var pm10 = {
-      graphTitle : "PM10 Merenja",
-      graphSubTitle : "SWAP-APM",
-      footNote : "Footnote for the graph",
-      yAxisLabel : "PM10 vrednosti",
-      xAxisLabel : "Vreme merenja u satima",
-      yAxisUnit : "µg/m3",
-inGraphDataShow : false,
-      datasetFill : true,
-      scaleLabel: "<%=value%>",
-      scaleTickSizeRight : 5,
-      scaleTickSizeLeft : 5,
-      scaleTickSizeBottom : 5,
-      scaleTickSizeTop : 5,
-      scaleFontSize : 16,
-      canvasBorders : true,
-      canvasBordersWidth : 3,
-      canvasBordersColor : "black",
-			graphTitleFontFamily : "'Arial'",
-			graphTitleFontSize : 24,
-			graphTitleFontStyle : "bold",
-			graphTitleFontColor : "#666",
-			graphSubTitleFontFamily : "'Arial'",
-			graphSubTitleFontSize : 18,
-			graphSubTitleFontStyle : "normal",
-			graphSubTitleFontColor : "#666",
-			footNoteFontFamily : "'Arial'",
-			footNoteFontSize : 8,
-			footNoteFontStyle : "bold",
-			footNoteFontColor : "#666",
-      legend : true,
-	    legendFontFamily : "'Arial'",
-	    legendFontSize : 12,
-	    legendFontStyle : "normal",
-	    legendFontColor : "#666",
-      legendBlockSize : 15,
-      legendBorders : true,
-      legendBordersWidth : 1,
-      legendBordersColors : "#666",
-      yAxisLeft : true,
-      yAxisRight : false,
-      xAxisBottom : true,
-      xAxisTop : false,
-			yAxisFontFamily : "'Arial'",
-			yAxisFontSize : 16,
-			yAxisFontStyle : "normal",
-			yAxisFontColor : "#666",
-	 	  xAxisFontFamily : "'Arial'",
-			xAxisFontSize : 16,
-			xAxisFontStyle : "normal",
-			xAxisFontColor : "#666",
-			yAxisUnitFontFamily : "'Arial'",
-			yAxisUnitFontSize : 8,
-			yAxisUnitFontStyle : "normal",
-			yAxisUnitFontColor : "#666",
-      annotateDisplay : true,
-      spaceTop : 0,
-      spaceBottom : 0,
-      spaceLeft : 0,
-      spaceRight : 0,
-      logarithmic: false,
-//      showYAxisMin : false,
-      rotateLabels : "smart",
-      xAxisSpaceOver : 0,
-      xAxisSpaceUnder : 0,
-      xAxisLabelSpaceAfter : 0,
-      xAxisLabelSpaceBefore : 0,
-      legendBordersSpaceBefore : 0,
-      legendBordersSpaceAfter : 0,
-      footNoteSpaceBefore : 0,
-      footNoteSpaceAfter : 0,
-      startAngle : 0,
-      dynamicDisplay : true
-}
-var pm25 = {
-      graphTitle : "PM2.5 Merenja",
-      graphSubTitle : "SWAP-APM",
-      footNote : "Footnote for the graph",
-      yAxisLabel : "PM2.5 vrednosti",
-      xAxisLabel : "Vreme merenja u satima",
-      yAxisUnit : "µg/m3",
-inGraphDataShow : false,
-      datasetFill : true,
-      scaleLabel: "<%=value%>",
-      scaleTickSizeRight : 5,
-      scaleTickSizeLeft : 5,
-      scaleTickSizeBottom : 5,
-      scaleTickSizeTop : 5,
-      scaleFontSize : 16,
-      canvasBorders : true,
-      canvasBordersWidth : 3,
-      canvasBordersColor : "black",
-			graphTitleFontFamily : "'Arial'",
-			graphTitleFontSize : 24,
-			graphTitleFontStyle : "bold",
-			graphTitleFontColor : "#666",
-			graphSubTitleFontFamily : "'Arial'",
-			graphSubTitleFontSize : 18,
-			graphSubTitleFontStyle : "normal",
-			graphSubTitleFontColor : "#666",
-			footNoteFontFamily : "'Arial'",
-			footNoteFontSize : 8,
-			footNoteFontStyle : "bold",
-			footNoteFontColor : "#666",
-      legend : true,
-	    legendFontFamily : "'Arial'",
-	    legendFontSize : 12,
-	    legendFontStyle : "normal",
-	    legendFontColor : "#666",
-      legendBlockSize : 15,
-      legendBorders : true,
-      legendBordersWidth : 1,
-      legendBordersColors : "#666",
-      yAxisLeft : true,
-      yAxisRight : false,
-      xAxisBottom : true,
-      xAxisTop : false,
-			yAxisFontFamily : "'Arial'",
-			yAxisFontSize : 16,
-			yAxisFontStyle : "normal",
-			yAxisFontColor : "#666",
-	 	  xAxisFontFamily : "'Arial'",
-			xAxisFontSize : 16,
-			xAxisFontStyle : "normal",
-			xAxisFontColor : "#666",
-			yAxisUnitFontFamily : "'Arial'",
-			yAxisUnitFontSize : 8,
-			yAxisUnitFontStyle : "normal",
-			yAxisUnitFontColor : "#666",
-      annotateDisplay : true,
-      spaceTop : 0,
-      spaceBottom : 0,
-      spaceLeft : 0,
-      spaceRight : 0,
-      logarithmic: false,
-//      showYAxisMin : false,
-      rotateLabels : "smart",
-      xAxisSpaceOver : 0,
-      xAxisSpaceUnder : 0,
-      xAxisLabelSpaceAfter : 0,
-      xAxisLabelSpaceBefore : 0,
-      legendBordersSpaceBefore : 0,
-      legendBordersSpaceAfter : 0,
-      footNoteSpaceBefore : 0,
-      footNoteSpaceAfter : 0,
-      startAngle : 0,
-      dynamicDisplay : true
-}
-
-
-
-
-	window.onload = function(){
-		var ctx1 = document.getElementById("grafikon1").getContext("2d");
-		window.myLine = new Chart(ctx1).Line(lineChartData1, so2);
-	}
-	</script>
 		<?php
 }
 else if($_GET[action]=='add'&&$_SESSION[role]=='admin')
 {
+
+$title="Gateway add";
 	if($_GET[gatewayid]!=''||!empty($_GET[gatewayid]))
 	{
 		$gatewayid=$_GET[gatewayid];
@@ -819,6 +484,8 @@ else if($_GET[action]=='add'&&$_SESSION[role]=='admin')
 }
 else if($_GET[action]=='submit'&&$_SESSION[role]=='admin')
 {
+
+$title="Gateway submit";
 	$accesstoken=$_POST[accesstoken];
 	$name=$_POST[name];
 	$status=$_POST[status];

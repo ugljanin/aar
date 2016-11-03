@@ -47,20 +47,8 @@ $filename=basename($_SERVER['PHP_SELF']);
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
-            <li><a href="#">Home</a></li>
-            <li><a href="logout.php">Logout</a></li>
-          </ul>
-        </div>
-      </div>
-    </nav>
-
-    <div class="container-fluid">
-      <div class="row">
-        <div class="col-sm-3 col-md-2 sidebar">
-          <ul class="nav nav-sidebar">
-          <?php
-
-						if($_SESSION[role]=='admin')
+          	<?php
+           	if($_SESSION[role]=='admin')
 						{
 							?>
 							<li <?php if($filename=='users.php') echo ' class="active"';?>><a href="users.php?action=list"><i class="fa fa-user"></i> Users</a></li>
@@ -86,17 +74,17 @@ $filename=basename($_SERVER['PHP_SELF']);
 							<?php
 
 						}
-					/*
-						<li><a href="#"><i class="fa fa-calendar"></i> Schedule events</a></li>
-									<li><a href="#"><i class="fa fa-area-chart"></i> Analytics</a></li>
-									<li><a href="#"><i class="fa fa-envelope"></i> Subscribe</a></li>
-									<li><a href="#"><i class="fa fa-exclamation-triangle"></i> Warning</a></li>
-						*/
 						?>
+            <li><a href="#">Home</a></li>
+            <li><a href="logout.php">Logout</a></li>
           </ul>
-
         </div>
-        <div class="col-sm-9 col-sm-offset-3 col-md-10 col-md-offset-2 main">
+      </div>
+    </nav>
+
+    <div class="container-fluid">
+      <div class="row">
+        <div class="col-sm-12 main">
 
 <h1 class="page-header"><?php echo $title;?></h1>
         <?php

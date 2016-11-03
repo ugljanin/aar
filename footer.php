@@ -16,7 +16,7 @@
 
     <script src="js/moment.min.js"></script>
     <script src="js/bootstrap-datetimepicker.js"></script>
-    <script src="js/ChartNew.js"></script>
+    <script src="js/Chart.js"></script>
 	<script>
 
 
