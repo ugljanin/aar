@@ -88,16 +88,16 @@ include "header.php";
 	}
 	?>
 	<div class="row">
-		<div class="col-sm-6">
+		<div class="col-lg-6">
         <canvas id="canvas"></canvas>
 		</div>
-		<div class="col-sm-6">
+		<div class="col-lg-6">
         <canvas id="canvas1"></canvas>
 		</div>
-		<div class="col-sm-6">
+		<div class="col-lg-6">
         <canvas id="canvas2"></canvas>
 		</div>
-		<div class="col-sm-6">
+		<div class="col-lg-6">
         <canvas id="canvas3"></canvas>
 		</div>
 	</div>
