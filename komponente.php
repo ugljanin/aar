@@ -1,88 +1,46 @@
 <?php
-include("fns.php");
-
-date_default_timezone_set('UTC');
-
-$title="Configure gateway";
-include "header.php";
-
+require_once("fns.php");
 $conn=db_connect();
-$time=time();
-$timedate=date('Y-m-d H:s:i',$time);
-
-if($_GET[action]=='list')
-{
-
 ?>
-<a href="gateways.php?action=add" class="btn btn-primary" role="button">Create new gateway</a>
-	<div class="row">
-		<div class="col-sm-12">
-			<h2>List of gateways</h2>
-			<div>
-			<table class="table table-hover">
-				<thead>
-					<tr>
-						<th>ID</th>
-						<th>Name</th>
-						<th>Location</th>
-						<th>Access token</th>
-						<th>Status</th>
-						<th></th>
-						<th></th>
-					</tr>
-				</thead>
-				<tbody>
-				<tr>
-				<?php
-
-						if($_SESSION[role]=='admin')
-						{
-							$sql="select * from gateways order by gatewayid desc";
-
-							$result=mysqli_query($conn,$sql);
-							while($gateway=mysqli_fetch_array($result,MYSQLI_ASSOC)){
-								echo '<tr>';
-								echo '<td>#'.$gateway[gatewayid].'</td>';
-								echo '<td>'.$gateway[name].'</td>';
-								echo '<td>'.$gateway[location].'</td>';
-								echo '<td>'.$gateway[accesstoken].'</td>';
-								echo '<td>'.$gateway[status].'</td>';
-								echo '<td><a class="btn btn-md btn-info" href="gateways.php?action=dashboard&gatewayid='.$gateway[gatewayid].'">Dashboard</a> <a class="btn btn-md btn-success" href="gateways.php?action=add&gatewayid='.$gateway[gatewayid].'">Edit</a> <a class="btn btn-md btn-danger" href="gateway.php?action=add&gatewayid='.$gateway[gatewayid].'">Delete</a></td>';
-								echo '<td></td>';
-								echo '</tr>';
-							}
-						}
+    <script src="<?php echo ROOT;?>js/ChartNew.js"></script>
+	<script>
 
 
 
-				?>
-					</tr>
-					</tbody>
-				</table>
-			</div>
-		</div>
-	</div>
-	<?php
-}
-else if($_GET[action]=='dashboard'&&$_SESSION[role]=='admin')
-{
-	$sql="SELECT  DATE_FORMAT( date, '%Y-%m-%d at %H:%i' ) sat, value
-	FROM sensordata
-	where gatewayid='1'
-	and name='temperature'
-	ORDER BY date DESC limit 60";
+	</script>
+<h1>Merenja po stanicama i indeksi</h1>
+<?php
+
+	$sql="SELECT  DATE_FORMAT( datumdo, '%d/%m/%Y u %H sati' ) sat, MAX(
+	CASE WHEN stanicaid = '1'
+	AND komponentaid = '1'
+	THEN vrednost
+	END ) prva, MAX(
+	CASE WHEN stanicaid = '2'
+	AND komponentaid = '1'
+	THEN vrednost
+	END ) druga, MAX(
+	CASE WHEN stanicaid = '3'
+	AND komponentaid = '1'
+	THEN vrednost
+	END ) treca
+	FROM vrednosti
+	GROUP BY datumdo
+	ORDER BY datumdo DESC limit 23";
 	$result=mysqli_query($conn,$sql);
 
 	while($podaci=mysqli_fetch_array($result,MYSQLI_ASSOC))
 	{
 			$datumi[]=$podaci[sat];
-			if($podaci[value]!='Not measured for this date')
-				$prvi[]=$podaci[value];
+			$prvi[]=$podaci[prva];
+			$drugi[]=$podaci[druga];
+			if($podaci[treca]!='-999')
+				$treci[]=$podaci[treca];
 			else
-				$prvi[]=0;
+				$treci[]=0;
 	}
 	?>
-	<h2>Temperature sensor</h2>
+	<h2>SO2 merenja za poslednja 24 sata na tri merne stanice</h2>
 	<script>
 	defCanvasWidth=1200;
 defCanvasHeight=600;
@@ -96,7 +54,7 @@ defCanvasHeight=600;
 			?>
 			datasets : [
 				{
-					label: "Temperature",
+					label: "Nis - Osnovna skola Sveti Sava",
 					fillColor : "rgba(255,0,0,0.0)",
 					strokeColor : "rgba(255,0,0,1)",
 					pointColor : "rgba(255,0,0,1)",
@@ -107,6 +65,217 @@ defCanvasHeight=600;
 					$prvi = implode(",", $prvi);
 					echo 'data:['.$prvi.']';
 					?>
+				},
+				{
+					label: "Kamenicki vis",
+					fillColor : "rgba(0,255,0,0.0)",
+					strokeColor : "rgba(0,255,0,1)",
+					pointColor : "rgba(0,255,0,1)",
+					pointStrokeColor : "#fff",
+					pointHighlightFill : "#fff",
+					pointHighlightStroke : "rgba(0,255,0,1)",
+					<?php
+					$drugi = implode(",", $drugi);
+					echo 'data:['.$drugi.']';
+					?>
+				},
+				{
+					label: "Nis - Institut za javno zdravlje",
+					fillColor : "rgba(0,0,255,0.0)",
+					strokeColor : "rgba(0,0,255,1)",
+					pointColor : "rgba(0,0,255,1)",
+					pointStrokeColor : "#fff",
+					pointHighlightFill : "#fff",
+					pointHighlightStroke : "rgba(0,0,255,1)",
+					<?php
+					$trecii = implode(",", $treci);
+					echo 'data:['.$trecii.']';
+					?>
+				}
+			]
+
+		}
+		</script>
+		<?php
+	$sql="SELECT DATE_FORMAT( datumdo, '%d/%m/%Y u %H sati' ) sat, MAX(
+	CASE WHEN stanicaid = '1'
+	AND komponentaid = '2'
+	THEN vrednost
+	END ) prva, MAX(
+	CASE WHEN stanicaid = '2'
+	AND komponentaid = '2'
+	THEN vrednost
+	END ) druga, MAX(
+	CASE WHEN stanicaid = '3'
+	AND komponentaid = '2'
+	THEN vrednost
+	END ) treca
+	FROM vrednosti
+	GROUP BY datumdo
+	ORDER BY datumdo DESC limit 23";
+	$result=mysqli_query($conn,$sql);
+	while($podaci=mysqli_fetch_array($result,MYSQLI_ASSOC))
+	{
+			$datumi2[]=$podaci[sat];
+			if($podaci[prva]!='-999')
+				$prvi2[]=$podaci[prva];
+			else
+				$prvi2[]=0;
+
+			if($podaci[druga]!='-999')
+				$drugi2[]=$podaci[druga];
+			else
+				$drugi2[]=0;
+
+			if($podaci[treca]!='-999')
+				$treci2[]=$podaci[treca];
+			else
+				$treci2[]=0;
+	}
+	?>
+	<h2>NO2 merenja za poslednjih 7 dana na tri merne stanice</h2>
+
+	<script>
+	      document.write("<canvas id=\"grafikon2\" height=\""+defCanvasHeight+"\" width=\""+defCanvasWidth+"\"></canvas>");
+
+		var lineChartData2 = {
+			<?php
+			$sati2 = implode('","', $datumi2);
+			echo 'labels:["'.$sati2.'"],';
+			?>
+			datasets : [
+				{
+					label: "Nis - Osnovna skola Sveti Sava",
+					fillColor : "rgba(255,0,0,0.0)",
+					strokeColor : "rgba(255,0,0,1)",
+					pointColor : "rgba(255,0,0,1)",
+					pointStrokeColor : "#fff",
+					pointHighlightFill : "#fff",
+					pointHighlightStroke : "rgba(255,0,0,1)",
+					<?php
+					$prvi2 = implode(",", $prvi2);
+					echo 'data:['.$prvi2.']';
+					?>
+				},
+				{
+					label: "Kamenicki vis",
+					fillColor : "rgba(0,255,0,0.0)",
+					strokeColor : "rgba(0,255,0,1)",
+					pointColor : "rgba(0,255,0,1)",
+					pointStrokeColor : "#fff",
+					pointHighlightFill : "#fff",
+					pointHighlightStroke : "rgba(0,255,0,1)",
+					<?php
+					$drugi2 = implode(",", $drugi2);
+					echo 'data:['.$drugi2.']';
+					?>
+				},
+				{
+					label: "Nis - Institut za javno zdravlje",
+					fillColor : "rgba(0,0,255,0.0)",
+					strokeColor : "rgba(0,0,255,1)",
+					pointColor : "rgba(0,0,255,1)",
+					pointStrokeColor : "#fff",
+					pointHighlightFill : "#fff",
+					pointHighlightStroke : "rgba(0,0,255,1)",
+					<?php
+					$treci2 = implode(",", $treci2);
+					echo 'data:['.$treci2.']';
+					?>
+				}
+			]
+
+		}
+		</script>
+
+		<?php
+	$sql="SELECT  DATE_FORMAT( datumdo, '%d/%m/%Y u %H sati' ) sat, MAX(
+	CASE WHEN stanicaid = '1'
+	AND komponentaid = '3'
+	THEN vrednost
+	END ) prva, MAX(
+	CASE WHEN stanicaid = '2'
+	AND komponentaid = '3'
+	THEN vrednost
+	END ) druga, MAX(
+	CASE WHEN stanicaid = '3'
+	AND komponentaid = '3'
+	THEN vrednost
+	END ) treca
+	FROM vrednosti
+	GROUP BY datumdo
+	ORDER BY datumdo DESC limit 23";
+	$result=mysqli_query($conn,$sql);
+
+	while($podaci=mysqli_fetch_array($result,MYSQLI_ASSOC))
+	{
+			$datumi3[]=$podaci[sat];
+
+			if($podaci[prva]!='-999')
+				$prvi3[]=$podaci[prva]*1000;
+			else
+				$prvi3[]=0;
+
+			if($podaci[druga]!='-999')
+				$drugi3[]=$podaci[druga]*1000;
+			else
+				$drugi3[]=0;
+
+			if($podaci[treca]!='-999')
+				$treci3[]=$podaci[treca]*1000;
+			else
+				$treci3[]=0;
+	}
+	?>
+	<h2>CO merenja za poslednja 24 sata na tri merne stanice</h2>
+
+	<script>
+	      document.write("<canvas id=\"grafikon3\" height=\""+defCanvasHeight+"\" width=\""+defCanvasWidth+"\"></canvas>");
+
+		var lineChartData3 = {
+			<?php
+			$sati3 = implode('","', $datumi3);
+			echo 'labels:["'.$sati3.'"],';
+			?>
+			datasets : [
+				{
+					label: "Nis - Osnovna skola Sveti Sava",
+					fillColor : "rgba(255,0,0,0.0)",
+					strokeColor : "rgba(255,0,0,1)",
+					pointColor : "rgba(255,0,0,1)",
+					pointStrokeColor : "#fff",
+					pointHighlightFill : "#fff",
+					pointHighlightStroke : "rgba(255,0,0,1)",
+					<?php
+					$prvi3 = implode(",", $prvi3);
+					echo 'data:['.$prvi3.']';
+					?>
+				},
+				{
+					label: "Kamenicki vis",
+					fillColor : "rgba(0,255,0,0.0)",
+					strokeColor : "rgba(0,255,0,1)",
+					pointColor : "rgba(0,255,0,1)",
+					pointStrokeColor : "#fff",
+					pointHighlightFill : "#fff",
+					pointHighlightStroke : "rgba(0,255,0,1)",
+					<?php
+					$drugi3 = implode(",", $drugi3);
+					echo 'data:['.$drugi3.']';
+					?>
+				},
+				{
+					label: "Nis - Institut za javno zdravlje",
+					fillColor : "rgba(0,0,255,0.0)",
+					strokeColor : "rgba(0,0,255,1)",
+					pointColor : "rgba(0,0,255,1)",
+					pointStrokeColor : "#fff",
+					pointHighlightFill : "#fff",
+					pointHighlightStroke : "rgba(0,0,255,1)",
+					<?php
+					$treci3 = implode(",", $treci3);
+					echo 'data:['.$treci3.']';
+					?>
 				}
 			]
 
@@ -114,7 +283,278 @@ defCanvasHeight=600;
 		</script>
 
 
+		<?php
+	$sql="SELECT  DATE_FORMAT( datumdo, '%d/%m/%Y u %H sati' ) sat, MAX(
+	CASE WHEN stanicaid = '1'
+	AND komponentaid = '4'
+	THEN vrednost
+	END ) prva, MAX(
+	CASE WHEN stanicaid = '2'
+	AND komponentaid = '4'
+	THEN vrednost
+	END ) druga, MAX(
+	CASE WHEN stanicaid = '3'
+	AND komponentaid = '4'
+	THEN vrednost
+	END ) treca
+	FROM vrednosti
+	GROUP BY datumdo
+	ORDER BY datumdo DESC limit 23";
+	$result=mysqli_query($conn,$sql);
 
+	while($podaci=mysqli_fetch_array($result,MYSQLI_ASSOC))
+	{
+			$datumi4[]=$podaci[sat];
+			if($podaci[prva]!='-999')
+				$prvi4[]=$podaci[prva];
+			else
+				$prvi4[]=0;
+
+			if($podaci[druga]!='-999')
+				$drugi4[]=$podaci[druga];
+			else
+				$drugi4[]=0;
+
+			if($podaci[treca]!='-999')
+				$treci4[]=$podaci[treca];
+			else
+				$treci4[]=0;
+	}
+	?>
+	<h2>O3 merenja za poslednja 24 sata na tri merne stanice</h2>
+
+	<script>
+	      document.write("<canvas id=\"grafikon4\" height=\""+defCanvasHeight+"\" width=\""+defCanvasWidth+"\"></canvas>");
+
+		var lineChartData4 = {
+			<?php
+			$sati4 = implode('","', $datumi4);
+			echo 'labels:["'.$sati4.'"],';
+			?>
+			datasets : [
+				{
+					label: "Nis - Osnovna skola Sveti Sava",
+					fillColor : "rgba(255,0,0,0.0)",
+					strokeColor : "rgba(255,0,0,1)",
+					pointColor : "rgba(255,0,0,1)",
+					pointStrokeColor : "#fff",
+					pointHighlightFill : "#fff",
+					pointHighlightStroke : "rgba(255,0,0,1)",
+					<?php
+					$prvi4tekst = implode(",", $prvi4);
+					echo 'data:['.$prvi4tekst.']';
+					?>
+				},
+				{
+					label: "Kamenicki vis",
+					fillColor : "rgba(0,255,0,0.0)",
+					strokeColor : "rgba(0,255,0,1)",
+					pointColor : "rgba(0,255,0,1)",
+					pointStrokeColor : "#fff",
+					pointHighlightFill : "#fff",
+					pointHighlightStroke : "rgba(0,255,0,1)",
+					<?php
+					$drugi4tekst = implode(",", $drugi4);
+					echo 'data:['.$drugi4tekst.']';
+					?>
+				},
+				{
+					label: "Nis - Institut za javno zdravlje",
+					fillColor : "rgba(0,0,255,0.0)",
+					strokeColor : "rgba(0,0,255,1)",
+					pointColor : "rgba(0,0,255,1)",
+					pointStrokeColor : "#fff",
+					pointHighlightFill : "#fff",
+					pointHighlightStroke : "rgba(0,0,255,1)",
+					<?php
+					$treci4tekst = implode(",", $treci4);
+					echo 'data:['.$treci4tekst.']';
+					?>
+				}
+			]
+
+		}
+		</script>
+
+		<?php
+	$sql="SELECT  DATE_FORMAT( datumdo, '%d/%m/%Y u %H sati' ) sat, MAX(
+	CASE WHEN stanicaid = '1'
+	AND komponentaid = '5'
+	THEN vrednost
+	END ) prva, MAX(
+	CASE WHEN stanicaid = '2'
+	AND komponentaid = '5'
+	THEN vrednost
+	END ) druga, MAX(
+	CASE WHEN stanicaid = '3'
+	AND komponentaid = '5'
+	THEN vrednost
+	END ) treca
+	FROM vrednosti
+	GROUP BY datumdo
+	ORDER BY datumdo DESC limit 23";
+	$result=mysqli_query($conn,$sql);
+	while($podaci=mysqli_fetch_array($result,MYSQLI_ASSOC))
+	{
+			$datumi5[]=$podaci[sat];
+			if($podaci[druga]!='-999')
+				$prvi5[]=$podaci[druga];
+			else
+				$prvi5[]=0;
+		if($podaci[druga]!='-999')
+				$drugi5[]=$podaci[druga];
+			else
+				$drugi5[]=0;
+			if($podaci[treca]!='-999')
+				$treci5[]=$podaci[treca];
+			else
+				$treci5[]=0;
+	}
+	?>
+	<h2>PM10 merenja za poslednja 23 sata na tri merne stanice</h2>
+
+	<script>
+	      document.write("<canvas id=\"grafikon5\" height=\""+defCanvasHeight+"\" width=\""+defCanvasWidth+"\"></canvas>");
+
+		var lineChartData5 = {
+			<?php
+			$sati5 = implode('","', $datumi5);
+			echo 'labels:["'.$sati5.'"],';
+			?>
+			datasets : [
+				{
+					label: "Nis - Osnovna skola Sveti Sava",
+					fillColor : "rgba(255,0,0,0.0)",
+					strokeColor : "rgba(255,0,0,1)",
+					pointColor : "rgba(255,0,0,1)",
+					pointStrokeColor : "#fff",
+					pointHighlightFill : "#fff",
+					pointHighlightStroke : "rgba(255,0,0,1)",
+					<?php
+					$prvi5 = implode(",", $prvi5);
+					echo 'data:['.$prvi5.']';
+					?>
+				},
+				{
+					label: "Kamenicki vis",
+					fillColor : "rgba(0,255,0,0.0)",
+					strokeColor : "rgba(0,255,0,1)",
+					pointColor : "rgba(0,255,0,1)",
+					pointStrokeColor : "#fff",
+					pointHighlightFill : "#fff",
+					pointHighlightStroke : "rgba(0,255,0,1)",
+					<?php
+					$drugi5 = implode(",", $drugi5);
+					echo 'data:['.$drugi5.']';
+					?>
+				},
+				{
+					label: "Nis - Institut za javno zdravlje",
+					fillColor : "rgba(0,0,255,0.0)",
+					strokeColor : "rgba(0,0,255,1)",
+					pointColor : "rgba(0,0,255,1)",
+					pointStrokeColor : "#fff",
+					pointHighlightFill : "#fff",
+					pointHighlightStroke : "rgba(0,0,255,1)",
+					<?php
+					$treci5 = implode(",", $treci5);
+					echo 'data:['.$treci5.']';
+					?>
+				}
+			]
+
+		}
+		</script>
+
+		<?php
+	$sql="SELECT  DATE_FORMAT( datumdo, '%d/%m/%Y u %H sati' ) sat, MAX(
+	CASE WHEN stanicaid = '1'
+	AND komponentaid = '6'
+	THEN vrednost
+	END ) prva, MAX(
+	CASE WHEN stanicaid = '2'
+	AND komponentaid = '6'
+	THEN vrednost
+	END ) druga, MAX(
+	CASE WHEN stanicaid = '3'
+	AND komponentaid = '6'
+	THEN vrednost
+	END ) treca
+	FROM vrednosti
+	GROUP BY datumdo
+	ORDER BY datumdo DESC limit 23";
+	$result=mysqli_query($conn,$sql);
+	while($podaci=mysqli_fetch_array($result,MYSQLI_ASSOC))
+	{
+			$datumi6[]=$podaci[sat];
+			if($podaci[druga]!='-999')
+				$prvi6[]=$podaci[druga];
+			else
+				$prvi6[]=0;
+			if($podaci[druga]!='-999')
+				$drugi6[]=$podaci[druga];
+			else
+				$drugi6[]=0;
+			if($podaci[treca]!='-999')
+				$treci6[]=$podaci[treca];
+			else
+				$treci6[]=0;
+	}
+	?>
+	<h2>PM2.5 merenja za poslednja 23 sata na tri merne stanice</h2>
+
+	<script>
+	      document.write("<canvas id=\"grafikon6\" height=\""+defCanvasHeight+"\" width=\""+defCanvasWidth+"\"></canvas>");
+
+		var lineChartData6 = {
+			<?php
+			$sati6 = implode('","', $datumi6);
+			echo 'labels:["'.$sati6.'"],';
+			?>
+			datasets : [
+				{
+					label: "Nis - Osnovna skola Sveti Sava",
+					fillColor : "rgba(255,0,0,0.0)",
+					strokeColor : "rgba(255,0,0,1)",
+					pointColor : "rgba(255,0,0,1)",
+					pointStrokeColor : "#fff",
+					pointHighlightFill : "#fff",
+					pointHighlightStroke : "rgba(255,0,0,1)",
+					<?php
+					$prvi6 = implode(",", $prvi6);
+					echo 'data:['.$prvi5.']';
+					?>
+				},
+				{
+					label: "Kamenicki vis",
+					fillColor : "rgba(0,255,0,0.0)",
+					strokeColor : "rgba(0,255,0,1)",
+					pointColor : "rgba(0,255,0,1)",
+					pointStrokeColor : "#fff",
+					pointHighlightFill : "#fff",
+					pointHighlightStroke : "rgba(0,255,0,1)",
+					<?php
+					$drugi6 = implode(",", $drugi6);
+					echo 'data:['.$drugi6.']';
+					?>
+				},
+				{
+					label: "Nis - Institut za javno zdravlje",
+					fillColor : "rgba(0,0,255,0.0)",
+					strokeColor : "rgba(0,0,255,1)",
+					pointColor : "rgba(0,0,255,1)",
+					pointStrokeColor : "#fff",
+					pointHighlightFill : "#fff",
+					pointHighlightStroke : "rgba(0,0,255,1)",
+					<?php
+					$treci6 = implode(",", $treci6);
+					echo 'data:['.$treci6.']';
+					?>
+				}
+			]
+
+		}
+		</script>
 
   <!div id="divCursor" style="position:absolute"> <!/div>
 
@@ -772,114 +1212,24 @@ inGraphDataShow : false,
 	window.onload = function(){
 		var ctx1 = document.getElementById("grafikon1").getContext("2d");
 		window.myLine = new Chart(ctx1).Line(lineChartData1, so2);
+
+		var ctx2 = document.getElementById("grafikon2").getContext("2d");
+		window.myLine = new Chart(ctx2).Line(lineChartData2, no2);
+
+		var ctx3 = document.getElementById("grafikon3").getContext("2d");
+		window.myLine = new Chart(ctx3).Line(lineChartData3, co);
+
+		var ctx4 = document.getElementById("grafikon4").getContext("2d");
+		window.myLine = new Chart(ctx4).Line(lineChartData4, o3);
+
+		var ctx5 = document.getElementById("grafikon5").getContext("2d");
+		window.myLine = new Chart(ctx5).Line(lineChartData5,  pm10);
+
+		var ctx6 = document.getElementById("grafikon6").getContext("2d");
+		window.myLine = new Chart(ctx6).Line(lineChartData6,  pm25);
+
+
 	}
 	</script>
-		<?php
-}
-else if($_GET[action]=='add'&&$_SESSION[role]=='admin')
-{
-	if($_GET[gatewayid]!=''||!empty($_GET[gatewayid]))
-	{
-		$gatewayid=$_GET[gatewayid];
-		$sql="select * from gateways where gatewayid='$gatewayid'";
-		$result=mysqli_query($conn,$sql);
-		$gateway=mysqli_fetch_array($result,MYSQLI_ASSOC);
-	}
-
-	?>
-	<div class="row">
-			<div class="col-sm-12">
-				<h2>Gateways</h2>
-				 <form action="gateways.php?action=submit" method="post">
-				 <input type="hidden" name="gatewayid" value="<?php echo $gateway[gatewayid];?>">
-					<div class="form-group">
-						<label for="name">Name:</label>
-						<input type="text" class="form-control" name="name" id="name" value="<?php echo $gateway[name];?>">
-					</div>
-					<div class="form-group">
-						<label for="location">Location:</label>
-						<input type="text" class="form-control" name="location" id="location" value="<?php echo $gateway[location];?>">
-					</div>
-					<div class="form-group">
-						<label for="accesstoken">Access token:</label>
-						<input type="text" class="form-control" name="accesstoken" id="accesstoken" value="<?php echo $gateway[accesstoken];?>">
-					</div>
-					<div class="form-group">
-						<label for="status">Status:</label>
-						<select class="form-control" name="status" id="status">
-							<option value="Active" <?php if($gateway[status]=='Active') echo 'selected';?>>Active</option>
-							<option value="Blocked" <?php if($gateway[status]=='Blocked') echo 'selected';?>>Blocked</option>
-						</select>
-					</div>
-					<button type="submit" class="btn btn-default">Submit</button>
-				</form>
-			</div>
-	</div>
-			<?php
-}
-else if($_GET[action]=='submit'&&$_SESSION[role]=='admin')
-{
-	$accesstoken=$_POST[accesstoken];
-	$name=$_POST[name];
-	$status=$_POST[status];
-	$location=$_POST[location];
-	$date=date('Y-m-d H:s:i',time());
-
-
-	if($_POST[gatewayid]!=''||!empty($_POST[gatewayid]))
-	{
-
-		$gatewayid=$_POST[gatewayid];
-
-		$sql="update gateways
-		set name='".$name."',
-				accesstoken='".$accesstoken."',
-				location='".$location."',
-				status='".$status."'
-				where gatewayid='".$gatewayid."'";
-
-		$result=mysqli_query($conn,$sql);
-
-		if($result)
-		{
-			$_SESSION["messagetype"] = "success";
-			$_SESSION["message"] = "Gateway is changed";
-			echo "Gateway is changed!";
-
-		}
-		else
-		{
-			$_SESSION["messagetype"] = "danger";
-			$_SESSION["message"] = "Gateway is not changed";
-			echo "Gateway is not changed!";
-		}
-	}
-	else
-	{
-		$sql="insert into gateways (name, accesstoken, location, status) values ('".$name."','".$accesstoken."','".$location."','".$status."')";
-		$result=mysqli_query($conn,$sql);
-
-		if($result)
-		{
-			$_SESSION["messagetype"] = "success";
-			$_SESSION["message"] = "Gateway is added";
-			echo "Gateway is added!";
-
-		}
-		else
-		{
-			$_SESSION["messagetype"] = "danger";
-			$_SESSION["message"] = "Gateway is not added";
-			echo "Gateway is not added!";
-		}
-	}
-
-	redirect("gateways.php?action=list");
-}
-
-
-
-
-
-include "footer.php";
+	<?php
 ?>

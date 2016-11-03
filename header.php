@@ -43,7 +43,7 @@ $filename=basename($_SERVER['PHP_SELF']);
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </button>
-          <a class="navbar-brand" href="#">Controling system</a>
+          <a class="navbar-brand" href="#">aaR* Framework</a>
         </div>
         <div id="navbar" class="navbar-collapse collapse">
           <ul class="nav navbar-nav navbar-right">
@@ -63,8 +63,6 @@ $filename=basename($_SERVER['PHP_SELF']);
 						if($_SESSION[role]=='admin')
 						{
 							?>
-							<li <?php if($filename=='dashboard.php') echo ' class="active"';?>><a href="dashboard.php"><i class="fa fa-cog"></i> Dashboard</a></li>
-
 							<li <?php if($filename=='users.php') echo ' class="active"';?>><a href="users.php?action=list"><i class="fa fa-user"></i> Users</a></li>
 							<li <?php if($filename=='access-token.php') echo ' class="active"';?>><a href="access-token.php?action=list"><i class="fa fa-cog"></i> User access token</a></li>
 							<li <?php if($filename=='gateways.php') echo ' class="active"';?>><a href="gateways.php?action=list"><i class="fa fa-cog"></i> Gateways</a></li>
@@ -73,7 +71,6 @@ $filename=basename($_SERVER['PHP_SELF']);
 						else if($_SESSION[role]=='doctor')
 						{
 							?>
-
 							<li <?php if($filename=='dashboard.php') echo ' class="active"';?>><a href="dashboard.php"><i class="fa fa-tachometer"></i> Dashboard</a></li>
 							<li <?php if($filename=='access-token.php') echo ' class="active"';?>><a href="access-token.php?action=list"><i class="fa fa-cloud"></i> Access token</a></li>
 							<li <?php if($filename=='patient.php') echo ' class="active"';?>><a href="report.php?action=list"><i class="fa fa-book"></i> Report</a></li>

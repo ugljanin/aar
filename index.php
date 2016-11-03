@@ -25,7 +25,7 @@ if (isset($_SESSION["user_id"]) && $_SESSION["user_id"] != "") {
     if($_SESSION['ulogakod']=='USER')
 		redirect("dashboard.php");
 	else
-		redirect("dashboard.php");
+		redirect("gateways.php?action=list");
 }
 
 $title = "Login";
@@ -126,7 +126,7 @@ if ($action == "login"&&!empty($_POST['user'])&&!empty($_POST['passwd'])) {
 						if($_SESSION['ulogakod']=='USER')
 							redirect("dashboard.php");
 						else
-							redirect("dashboard.php");
+							redirect("gateways.php?action=list");
 
 					}
 					else//ako nije ispravna sifra
