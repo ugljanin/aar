@@ -128,7 +128,7 @@ include "header.php";
 
                 title:{
                     display:true,
-                    text:'aaR* Framework'
+                    text:'*aaR Framework'
                 },
                 tooltips: {
                     mode: 'label',
@@ -201,7 +201,7 @@ include "header.php";
 
                 title:{
                     display:true,
-                    text:'aaR* Framework'
+                    text:'*aaR Framework'
                 },
                 tooltips: {
                     mode: 'label',
@@ -274,7 +274,7 @@ include "header.php";
 
                 title:{
                     display:true,
-                    text:'aaR* Framework'
+                    text:'*aaR Framework'
                 },
                 tooltips: {
                     mode: 'label',
@@ -350,7 +350,7 @@ include "header.php";
 
                 title:{
                     display:true,
-                    text:'aaR* Framework'
+                    text:'*aaR Framework'
                 },
                 tooltips: {
                     mode: 'label',
