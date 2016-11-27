@@ -36,8 +36,7 @@ include "header.php";
 				<tr>
 				<?php
 
-						if($_SESSION[role]=='admin')
-						{
+
 							$sql="select * from gateways order by gatewayid desc";
 
 							$result=mysqli_query($conn,$sql);
@@ -48,11 +47,19 @@ include "header.php";
 								echo '<td>'.$gateway[location].'</td>';
 								echo '<td>'.$gateway[accesstoken].'</td>';
 								echo '<td>'.$gateway[status].'</td>';
-								echo '<td><a class="btn btn-md btn-info" href="gateways.php?action=monitor&gatewayid='.$gateway[gatewayid].'">Monitor</a> <a class="btn btn-md btn-success" href="gateways.php?action=add&gatewayid='.$gateway[gatewayid].'">Edit</a> <a class="btn btn-md btn-danger" href="gateway.php?action=add&gatewayid='.$gateway[gatewayid].'">Delete</a></td>';
-								echo '<td></td>';
+								echo '<td>';
+								if($_SESSION[role]=='admin'||$_SESSION[role]=='doctor'||$_SESSION[role]=='nurse')
+								echo '<a class="btn btn-md btn-info" href="gateways.php?action=monitor&gatewayid='.$gateway[gatewayid].'">Monitor</a>';
+
+								if($_SESSION[role]=='admin')
+								echo '<a class="btn btn-md btn-success" href="gateways.php?action=add&gatewayid='.$gateway[gatewayid].'">Edit</a>';
+
+								if($_SESSION[role]=='admin')
+								echo '<a class="btn btn-md btn-danger" href="gateway.php?action=add&gatewayid='.$gateway[gatewayid].'">Delete</a>';
+								echo '</td>';
 								echo '</tr>';
 							}
-						}
+
 
 
 
