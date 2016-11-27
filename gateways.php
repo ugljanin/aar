@@ -72,7 +72,7 @@ include "header.php";
 	</div>
 	<?php
 }
-else if($_GET[action]=='monitor'&&$_SESSION[role]=='admin')
+else if($_GET[action]=='monitor'&&($_SESSION[role]=='admin'||$_SESSION[role]=='doctor'||$_SESSION[role]=='nurse'))
 {
 
 $title="Gateway monitoring";
