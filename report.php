@@ -192,7 +192,7 @@ else if($_GET[action]=='view')
 
 					<div class="form-group">
 						<label for="title">Status:</label>
-						<input type="text" class="form-control" name="title" id="title" readonly="readonly" value="<?php echo $report[Status];?>">
+						<input type="text" class="form-control" name="title" id="title" readonly="readonly" value="<?php echo $report[status];?>">
 					</div>
 				</form>
 			</div>
