@@ -14,8 +14,12 @@ if($_GET[action]=='list')
 $title="Gateway list";
 
 include "header.php";
+	if($_SESSION[role]=='admin')
+	{
+		echo '<a href="gateways.php?action=add" class="btn btn-primary" role="button">Create new gateway</a>';
+	}
 ?>
-<a href="gateways.php?action=add" class="btn btn-primary" role="button">Create new gateway</a>
+
 	<div class="row">
 		<div class="col-sm-12">
 			<h2>List of gateways</h2>
