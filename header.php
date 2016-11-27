@@ -76,7 +76,7 @@ $filename=basename($_SERVER['PHP_SELF']);
 						}
 						?>
             <li><a href="#">Home</a></li>
-            <li><a href="logout.php">Logout</a></li>
+            <li><a href="logout.php">Logout [<?php if(isset($_SESSION["user"])) echo $_SESSION["user"];?>]</a></li>
           </ul>
         </div>
       </div>
