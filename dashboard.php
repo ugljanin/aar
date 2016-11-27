@@ -26,7 +26,10 @@ $timedate=date('Y-m-d H:s:i',$time);
 				<tbody>
 				<tr>
 				<?php
-$sql="select sensordata.value, sensordata.data, gateways.name as gatewat from sensordata, gateways where name='heartbeat' order by id desc limit 50";
+$sql="select sensordata.value, sensordata.data, gateways.name as gateway
+from sensordata, gateways
+where name='heartbeat'
+order by dataid desc limit 50";
 $result=mysqli_query($conn,$sql);
 while($sensor=mysqli_fetch_array($result,MYSQLI_ASSOC))
 {
@@ -56,7 +59,10 @@ while($sensor=mysqli_fetch_array($result,MYSQLI_ASSOC))
 				<tbody>
 				<tr>
 				<?php
-$sql="select sensordata.value, sensordata.data, gateways.name as gatewat from sensordata, gateways where name='bodytemperature' order by id desc limit 50";
+$sql="select sensordata.value, sensordata.data, gateways.name as gateway
+from sensordata, gateways
+where name='bodytemperature'
+order by dataid desc limit 50";
 $result=mysqli_query($conn,$sql);
 while($sensor=mysqli_fetch_array($result,MYSQLI_ASSOC))
 {
@@ -86,7 +92,10 @@ while($sensor=mysqli_fetch_array($result,MYSQLI_ASSOC))
 				<tbody>
 				<tr>
 				<?php
-$sql="select sensordata.value, sensordata.data, gateways.name as gatewat from sensordata, gateways where name='humidity' order by id desc limit 50";
+$sql="select sensordata.value, sensordata.data, gateways.name as gateway
+from sensordata, gateways
+where name='humidity'
+order by dataid desc limit 50";
 $result=mysqli_query($conn,$sql);
 while($sensor=mysqli_fetch_array($result,MYSQLI_ASSOC))
 {
@@ -116,7 +125,10 @@ while($sensor=mysqli_fetch_array($result,MYSQLI_ASSOC))
 				<tbody>
 				<tr>
 				<?php
-$sql="select sensordata.value, sensordata.data, gateways.name as gatewat from sensordata, gateways where name='temperature' order by id desc limit 50";
+$sql="select sensordata.value, sensordata.data, gateways.name as gateway
+from sensordata, gateways
+where name='temperature'
+order by dataid desc limit 50";
 $result=mysqli_query($conn,$sql);
 while($sensor=mysqli_fetch_array($result,MYSQLI_ASSOC))
 {
