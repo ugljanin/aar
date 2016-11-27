@@ -164,7 +164,6 @@ else if($_GET[action]=='view')
 		$reportid=$_GET[reportid];
 		$sql="select report.title,report.reportid, report.description, gateways.name as gateway, report.creationdate, report.changedate, report.status, users.username from report, users, gateways
 		where users.userid=report.userid
-		and report.userid='$_SESSION[user_id]'
 		and report.gatewayid=gateways.gatewayid
 		and report.reportid='$reportid'";
 		$result=mysqli_query($conn,$sql);
