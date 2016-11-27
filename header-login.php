@@ -29,7 +29,6 @@
 
             <div class="panel panel-color panel-primary">
                 <div class="panel-heading">
-				<i class="fa fa-pie-chart text-center" style="width: 100%;font-size: 42px;"></i>
                    <h3 class="text-center m-t-10"> Resources <strong>project</strong> </h3>
                 </div>
 <?php if ($ERROR_MSG <> "")
