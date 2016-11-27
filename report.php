@@ -12,9 +12,12 @@ $timedate=date('Y-m-d H:s:i',$time);
 
 if($_GET[action]=='list')
 {
-
+	if($_SESSION[role]=='doctor')
+	{
+		echo '<a href="report.php?action=add" class="btn btn-primary" role="button">Create new report</a>';
+	}
 ?>
-<a href="report.php?action=add" class="btn btn-primary" role="button">Create new report</a>
+
 	<div class="row">
 		<div class="col-sm-12">
 			<h2>List of patients report</h2>
