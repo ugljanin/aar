@@ -189,12 +189,10 @@ else if($_GET[action]=='view')
 						<label for="title">Patient:</label>
 						<input type="text" class="form-control" name="title" id="title" readonly="readonly" value="<?php echo $report[gateway];?>">
 					</div>
+
 					<div class="form-group">
-						<label for="status">Status:</label>
-						<select class="form-control" name="status" id="status" readonly="readonly">
-							<option value="Draft" <?php if($report[status]=='Draft') echo 'selected';?>>Draft</option>
-							<option value="Finished" <?php if($report[status]=='Finished') echo 'selected';?>>Finished</option>
-						</select>
+						<label for="title">Status:</label>
+						<input type="text" class="form-control" name="title" id="title" readonly="readonly" value="<?php echo $report[Status];?>">
 					</div>
 				</form>
 			</div>
