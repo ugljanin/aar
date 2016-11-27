@@ -63,7 +63,7 @@ if($_GET[action]=='list')
 								if($report[status]=='Draft')
 								echo '<td><a href="report.php?action=add&reportid='.$report[reportid].'">Edit</a> | <a href="report.php?action=add&reportid='.$report[reportid].'">Delete</a></td>';
 								else
-									echo '<td></td>';
+									echo '<td><td><a href="report.php?action=view&reportid='.$report[reportid].'">View</a></td>';
 								echo '</tr>';
 							}
 						}
@@ -85,7 +85,7 @@ if($_GET[action]=='list')
 								echo '<td>'.$report[creationdate].'</td>';
 								echo '<td>'.$report[changedate].'</td>';
 								echo '<td>'.$report[status].'</td>';
-								echo '<td></td>';
+								echo '<td><td><a href="report.php?action=view&reportid='.$report[reportid].'">View</a></td>';
 								echo '</tr>';
 							}
 	}
@@ -152,6 +152,64 @@ else if($_GET[action]=='add'&&$_SESSION[role]=='doctor')
 						</select>
 					</div>
 					<button type="submit" class="btn btn-default">Submit</button>
+				</form>
+			</div>
+	</div>
+			<?php
+}
+else if($_GET[action]=='view')
+{
+	if($_GET[reportid]!=''||!empty($_GET[reportid]))
+	{
+		$reportid=$_GET[reportid];
+		$sql="select report.title,report.reportid, report.description, gateways.name as gateway, report.creationdate, report.changedate, report.status, users.username from report, users, gateways
+		where users.userid=report.userid
+		and report.userid='$_SESSION[user_id]'
+		and report.gatewayid=gateways.gatewayid
+		and report.reportid='$reportid'";
+		$result=mysqli_query($conn,$sql);
+		$report=mysqli_fetch_array($result,MYSQLI_ASSOC);
+	}
+
+	?>
+	<div class="row">
+			<div class="col-sm-12">
+				<h2>Patients report</h2>
+				 <form action="report.php?action=submit" method="post">
+				 <input type="hidden" name="reportid" value="<?php echo $report[reportid];?>">
+					<div class="form-group">
+						<label for="title">Title:</label>
+						<input type="text" class="form-control" name="title" id="title" readonly="readonly" value="<?php echo $report[title];?>">
+					</div>
+					<div class="form-group">
+						<label for="description">Description:</label>
+						<textarea class="form-control" name="description" id="description" readonly="readonly"><?php echo $report[description];?></textarea>
+					</div>
+					<div class="form-group">
+						<label for="gatewayid">Patient:</label>
+						<select class="form-control" name="gatewayid" id="gatewayid" readonly="readonly">
+						<?php
+						$sqlg="select * from gateways";
+						$resultg=mysqli_query($conn,$sqlg);
+						while($gateway=mysqli_fetch_array($resultg,MYSQLI_ASSOC))
+						{
+							echo '<option value="'.$gateway[gatewayid].'"';
+							if($report[gatewayid]==$gateway[gatewayid])
+								echo ' selected';
+							echo '>';
+							echo $gateway[name];
+							echo '</option>';
+						}
+						?>
+						</select>
+					</div>
+					<div class="form-group">
+						<label for="status">Status:</label>
+						<select class="form-control" name="status" id="status" readonly="readonly">
+							<option value="Draft" <?php if($report[status]=='Draft') echo 'selected';?>>Draft</option>
+							<option value="Finished" <?php if($report[status]=='Finished') echo 'selected';?>>Finished</option>
+						</select>
+					</div>
 				</form>
 			</div>
 	</div>
