@@ -3,7 +3,7 @@ include("fns.php");
 
 //date_default_timezone_set('UTC');
 
-$title="ICU temperature and humidity monitoring and control";
+$title="Reports";
 include "header.php";
 
 $conn=db_connect();
