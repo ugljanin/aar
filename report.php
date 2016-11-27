@@ -139,8 +139,6 @@ else if($_GET[action]=='add'&&$_SESSION[role]=='doctor')
 							echo '</option>';
 						}
 						?>
-							<option value="Draft" <?php if($report[status]=='Draft') echo 'selected';?>>Draft</option>
-							<option value="Finished" <?php if($report[status]=='Finished') echo 'selected';?>>Finished</option>
 						</select>
 					</div>
 					<div class="form-group">
