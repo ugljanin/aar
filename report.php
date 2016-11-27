@@ -166,6 +166,7 @@ else if($_GET[action]=='view')
 		where users.userid=report.userid
 		and report.gatewayid=gateways.gatewayid
 		and report.reportid='$reportid'";
+
 		$result=mysqli_query($conn,$sql);
 		$report=mysqli_fetch_array($result,MYSQLI_ASSOC);
 	}
@@ -185,22 +186,8 @@ else if($_GET[action]=='view')
 						<textarea class="form-control" name="description" id="description" readonly="readonly"><?php echo $report[description];?></textarea>
 					</div>
 					<div class="form-group">
-						<label for="gatewayid">Patient:</label>
-						<select class="form-control" name="gatewayid" id="gatewayid" readonly="readonly">
-						<?php
-						$sqlg="select * from gateways";
-						$resultg=mysqli_query($conn,$sqlg);
-						while($gateway=mysqli_fetch_array($resultg,MYSQLI_ASSOC))
-						{
-							echo '<option value="'.$gateway[gatewayid].'"';
-							if($report[gatewayid]==$gateway[gatewayid])
-								echo ' selected';
-							echo '>';
-							echo $gateway[name];
-							echo '</option>';
-						}
-						?>
-						</select>
+						<label for="title">Patient:</label>
+						<input type="text" class="form-control" name="title" id="title" readonly="readonly" value="<?php echo $report[gateway];?>">
 					</div>
 					<div class="form-group">
 						<label for="status">Status:</label>
@@ -212,7 +199,8 @@ else if($_GET[action]=='view')
 				</form>
 			</div>
 	</div>
-			<?php
+<?php
+
 }
 else if($_GET[action]=='submit'&&$_SESSION[role]=='doctor')
 {
@@ -223,10 +211,8 @@ else if($_GET[action]=='submit'&&$_SESSION[role]=='doctor')
 	$userid=$_SESSION[user_id];
 	$date=date('Y-m-d H:s:i',time());
 
-
 	if($_POST[reportid]!=''||!empty($_POST[reportid]))
 	{
-
 		$reportid=$_POST[reportid];
 
 		$sql="update report
