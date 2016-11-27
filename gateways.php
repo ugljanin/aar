@@ -14,7 +14,6 @@ if($_GET[action]=='list')
 $title="Gateway list";
 
 include "header.php";
-	echo $_SESSION[role];
 ?>
 <a href="gateways.php?action=add" class="btn btn-primary" role="button">Create new gateway</a>
 	<div class="row">

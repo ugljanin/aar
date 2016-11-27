@@ -23,6 +23,7 @@ if($_GET[action]=='list')
 				<thead>
 					<tr>
 						<th>ID</th>
+						<th>Gateway</th>
 						<th>Title</th>
 						<th>Description</th>
 						<th>Employee</th>
@@ -39,15 +40,17 @@ if($_GET[action]=='list')
 
 						if($_SESSION[role]=='doctor')
 						{
-							$sql="select report.title,report.reportid, report.description, report.creationdate, report.changedate, report.status, users.username from report, users
+							$sql="select report.title,report.reportid,gateways.name as gateway, report.description, report.creationdate, report.changedate, report.status, users.username
+							from report, users, gateways
 							where users.userid=report.userid
+							and report.gatewayid=gateways.gatewayid
 							and users.userid='$_SESSION[user_id]' order by report.reportid desc";
 
 							$result=mysqli_query($conn,$sql);
 							while($report=mysqli_fetch_array($result,MYSQLI_ASSOC)){
 								echo '<tr>';
 								echo '<td>#'.$report[reportid].'</td>';
-								echo '<td>'.$report[title].'</td>';
+								echo '<td>'.$report[gateway].'</td>';
 								echo '<td>'.$report[title].'</td>';
 								echo '<td>'.$report[description].'</td>';
 								echo '<td>'.$report[username].'</td>';
@@ -63,15 +66,16 @@ if($_GET[action]=='list')
 						}
 	else if($_SESSION[role]=='nurse')
 	{
-						$sql="select report.title,report.reportid, report.description, report.creationdate, report.changedate, report.status, users.username from report, users
+						$sql="select report.title,report.reportid, gateways.name as gateway, report.description, report.creationdate, report.changedate, report.status, users.username from report, users, gateways
 							where users.userid=report.userid
+							and report.gatewayid=gateways.gatewayid
 							and report.status='Finished' order by report.reportid desc";
 
 							$result=mysqli_query($conn,$sql);
 							while($report=mysqli_fetch_array($result,MYSQLI_ASSOC)){
 								echo '<tr>';
 								echo '<td>#'.$report[reportid].'</td>';
-								echo '<td>'.$report[title].'</td>';
+								echo '<td>'.$report[gateway].'</td>';
 								echo '<td>'.$report[title].'</td>';
 								echo '<td>'.$report[description].'</td>';
 								echo '<td>'.$report[username].'</td>';
@@ -135,6 +139,7 @@ else if($_GET[action]=='add'&&$_SESSION[role]=='doctor')
 else if($_GET[action]=='submit'&&$_SESSION[role]=='doctor')
 {
 	$description=$_POST[description];
+	$gatewayid=$_POST[gatewayid];
 	$title=$_POST[title];
 	$status=$_POST[status];
 	$userid=$_SESSION[user_id];
@@ -149,6 +154,7 @@ else if($_GET[action]=='submit'&&$_SESSION[role]=='doctor')
 		$sql="update report
 		set title='".$title."',
 				description='".$description."',
+				gatewayid='".$gatewayid."',
 				changedate='".$date."',
 				status='".$status."'
 				where reportid='".$reportid."'";
@@ -170,7 +176,7 @@ else if($_GET[action]=='submit'&&$_SESSION[role]=='doctor')
 	}
 	else
 	{
-		$sql="insert into report (title, description, creationdate, changedate, userid, status) values ('".$title."','".$description."','".$date."','".$date."','".$userid."','".$status."')";
+		$sql="insert into report (title, description, creationdate, changedate, userid, status,gatewayid) values ('".$title."','".$description."','".$date."','".$date."','".$userid."','".$status."','".$gatewayid."')";
 		$result=mysqli_query($conn,$sql);
 
 		if($result)
