@@ -26,9 +26,9 @@ $timedate=date('Y-m-d H:s:i',$time);
 				<tbody>
 				<tr>
 				<?php
-$sql="select sensordata.value, sensordata.data, gateways.name as gateway
+$sql="select sensordata.value, sensordata.date, gateways.name as gateway
 from sensordata, gateways
-where name='heartbeat'
+where sensordata.name='heartbeat'
 order by dataid desc limit 50";
 $result=mysqli_query($conn,$sql);
 while($sensor=mysqli_fetch_array($result,MYSQLI_ASSOC))
@@ -59,9 +59,9 @@ while($sensor=mysqli_fetch_array($result,MYSQLI_ASSOC))
 				<tbody>
 				<tr>
 				<?php
-$sql="select sensordata.value, sensordata.data, gateways.name as gateway
+$sql="select sensordata.value, sensordata.date, gateways.name as gateway
 from sensordata, gateways
-where name='bodytemperature'
+where sensordata.name='bodytemperature'
 order by dataid desc limit 50";
 $result=mysqli_query($conn,$sql);
 while($sensor=mysqli_fetch_array($result,MYSQLI_ASSOC))
@@ -92,9 +92,9 @@ while($sensor=mysqli_fetch_array($result,MYSQLI_ASSOC))
 				<tbody>
 				<tr>
 				<?php
-$sql="select sensordata.value, sensordata.data, gateways.name as gateway
+$sql="select sensordata.value, sensordata.date, gateways.name as gateway
 from sensordata, gateways
-where name='humidity'
+where sensordata.name='humidity'
 order by dataid desc limit 50";
 $result=mysqli_query($conn,$sql);
 while($sensor=mysqli_fetch_array($result,MYSQLI_ASSOC))
@@ -125,9 +125,9 @@ while($sensor=mysqli_fetch_array($result,MYSQLI_ASSOC))
 				<tbody>
 				<tr>
 				<?php
-$sql="select sensordata.value, sensordata.data, gateways.name as gateway
+$sql="select sensordata.value, sensordata.date, gateways.name as gateway
 from sensordata, gateways
-where name='temperature'
+where sensordata.name='temperature'
 order by dataid desc limit 50";
 $result=mysqli_query($conn,$sql);
 while($sensor=mysqli_fetch_array($result,MYSQLI_ASSOC))
