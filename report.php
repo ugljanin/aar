@@ -124,6 +124,26 @@ else if($_GET[action]=='add'&&$_SESSION[role]=='doctor')
 						<textarea class="form-control" name="description" id="description"><?php echo $report[description];?></textarea>
 					</div>
 					<div class="form-group">
+						<label for="gatewayid">Patient:</label>
+						<select class="form-control" name="gatewayid" id="gatewayid">
+						<?php
+						$sqlg="select * from gateways";
+						$resultg=mysqli_query($conn,$sqlg);
+						while($gateway=mysqli_fetch_array($resultg,MYSQLI_ASSOC))
+						{
+							echo '<option value="'.$gateway[gatewayid].'"';
+							if($report[gatewayid]==$gateway[gatewayid])
+								echo ' selected';
+							echo '>';
+							echo $gateway[name];
+							echo '</option>';
+						}
+						?>
+							<option value="Draft" <?php if($report[status]=='Draft') echo 'selected';?>>Draft</option>
+							<option value="Finished" <?php if($report[status]=='Finished') echo 'selected';?>>Finished</option>
+						</select>
+					</div>
+					<div class="form-group">
 						<label for="status">Status:</label>
 						<select class="form-control" name="status" id="status">
 							<option value="Draft" <?php if($report[status]=='Draft') echo 'selected';?>>Draft</option>
