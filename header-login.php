@@ -30,6 +30,9 @@
             <div class="panel panel-color panel-primary">
                 <div class="panel-heading">
                    <h3 class="text-center m-t-10"> Resources <strong>project</strong> </h3>
+                   <p>username: admin; password: admin</p>
+                   <p>username: userdoctor; password: userdoctor</p>
+                   <p>username: usernurse; password: usernurse</p>
                 </div>
 <?php if ($ERROR_MSG <> "")
 		{
